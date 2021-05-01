@@ -1,9 +1,10 @@
 import './App.css';
+import LogIn from './LogIn';
 
 function App() {
     return (
         <div className="App">
-            PhotoFrame
+            <LogIn />
         </div>
     );
 }
