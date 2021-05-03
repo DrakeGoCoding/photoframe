@@ -10,23 +10,52 @@ import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 
-export default function LogIn() {
+export default function SignUp() {
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [alertMessage, setAlertMessage] = useState('');
 
+    const changeName = e => setName(e.target.value)
     const changeEmail = e => setEmail(e.target.value)
     const changePassword = e => setPassword(e.target.value)
+    const changeConfirmPassword = e => setConfirmPassword(e.target.value)
 
     const handleSubmit = e => {
         e.preventDefault()
         try {
-            const account = { email, password }
-            console.log(account);
+            const account = { name, email, password }
+            checkInput() && console.log(account);
         } catch (error) {
 
         }
     }
+
+    const checkInput = () => {
+        if (!checkName()) {
+            setAlertMessage('Your name should be 3-50 characters.');
+            return false;
+        }
+        if (!checkEmail()) {
+            setAlertMessage('Your email should be at most 50 characters.');
+            return false;
+        }
+        if (!checkPassword()) {
+            setAlertMessage('Your password should be at least 6 characters.');
+            return false;
+        }
+        if (!checkConfirmPassword()) {
+            setAlertMessage('Password mismatch');
+            return false;
+        }
+        return true;
+    }
+
+    const checkName = () => name.length >= 3 && name.length <= 50
+    const checkEmail = () => email.length <= 50
+    const checkPassword = () => password.length >= 6
+    const checkConfirmPassword = () => confirmPassword.localeCompare(password) === 0
 
     const responseGoogle = res => {
         console.log(res.profileObj);
@@ -36,44 +65,54 @@ export default function LogIn() {
         console.log(res);
     }
 
-    const classes = useStyles()
+    const classes = useStyles();
     return (
         <div className={classes.background}>
             <Container component="main" maxWidth="sm" className={classes.container}>
                 <CssBaseline />
                 <div className={classes.wrapper}>
-                    <form className={classes.form} onSubmit={handleSubmit}>
-                        <Typography className={classes.title} variant="h5">{"Login"}</Typography>
+                    <form className={classes.form} onSubmit={handleSubmit} >
+                        <Typography className={classes.title} variant="h5">{"Sign up for your account"}</Typography>
                         <TextField
-                            variant="outlined"
-                            margin="normal"
-                            type="email"
-                            required
-                            fullWidth
+                            className={classes.textfield}
+                            variant="outlined" margin="normal" fullWidth
                             label="Email Address"
-                            name="email"
-                            value={email}
+                            type="email" name="email" value={email}
                             onChange={changeEmail}
-                            autoComplete="email"
-                            autoFocus />
+                            autoFocus required />
                         <TextField
-                            variant="outlined"
-                            margin="normal"
-                            type="password"
-                            required
-                            fullWidth
+                            className={classes.textfield}
+                            variant="outlined" margin="normal" fullWidth
+                            label="Your name"
+                            type="text" name="name" value={name}
+                            onChange={changeName}
+                            required />
+                        <TextField
+                            className={classes.textfield}
+                            variant="outlined" margin="normal" fullWidth
                             label="Password"
-                            name="password"
-                            value={password}
+                            type="password" name="password" value={password}
                             onChange={changePassword}
-                            autoComplete="current-password" />
+                            required />
+                        <TextField
+                            className={classes.textfield}
+                            variant="outlined" margin="normal" fullWidth
+                            label="Confirm Password"
+                            type="password" name="confirmPassword" value={confirmPassword}
+                            onChange={changeConfirmPassword}
+                            required />
                         {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
+                        <Typography variant="caption">
+                            By signing up, you confirm that you've read and accepted our&nbsp;
+                            <Link href="#">Terms of Services</Link>&nbsp;and &nbsp;
+                            <Link href="#">Privacy Policy</Link>.
+                        </Typography>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.submit}>{"Log in"}
+                            className={classes.submit}>{"Sign Up"}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
                             <hr />OR<hr />
@@ -115,14 +154,7 @@ export default function LogIn() {
                             </Grid>
                         </Grid>
                         <hr />
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">{'Forgot password?'}</Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="#" variant="body2">{"Sign up for an account"}</Link>
-                            </Grid>
-                        </Grid>
+                        <Link href="#" variant="body2" align="center">{"Already have an account? Log in"}</Link>
                     </form>
                 </div>
                 <Box className={classes.footer} p={2}>
@@ -173,7 +205,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
-        minWidth: '320px'
+        minWidth: '320px',
     },
     title: {
         fontWeight: 'bold',
@@ -220,6 +252,9 @@ const useStyles = makeStyles(theme => ({
         form: {
             padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
+        },
+        textfield:{
+            margin: '0.5rem 0'
         },
         footer: {
             display: 'none',

@@ -3,7 +3,9 @@ import { createMuiTheme } from "@material-ui/core";
 
 const theme = createMuiTheme({
     typography: {
-
+        button: {
+            textTransform: 'none',
+        },
     },
     palette: {
         primary: {
@@ -19,6 +21,9 @@ const theme = createMuiTheme({
             default: '#fff',
         },
     },
+    overrides:{
+        
+    }
 })
 
 export default theme;
