@@ -6,6 +6,11 @@ const theme = createMuiTheme({
         button: {
             textTransform: 'none',
         },
+        subtitle2:{
+            color: 'rgba(14,19,24,.7)',
+            fontWeight: '400',
+            fontSize: '0.875rem',
+        },
     },
     palette: {
         primary: {

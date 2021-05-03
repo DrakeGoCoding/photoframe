@@ -24,7 +24,7 @@ export default function LogIn() {
             const account = { email, password }
             console.log(account);
         } catch (error) {
-
+            setAlertMessage(error.response.data.error)
         }
     }
 
@@ -43,7 +43,7 @@ export default function LogIn() {
                 <CssBaseline />
                 <div className={classes.wrapper}>
                     <form className={classes.form} onSubmit={handleSubmit}>
-                        <Typography className={classes.title} variant="h5">{"Login"}</Typography>
+                        <Typography paragraph className={classes.title} variant="h5">{"Login to your account"}</Typography>
                         <TextField
                             className={classes.textfield}
                             variant="outlined"
@@ -51,7 +51,7 @@ export default function LogIn() {
                             type="email"
                             required
                             fullWidth
-                            label="Email Address"
+                            label="Email address"
                             name="email"
                             value={email}
                             onChange={changeEmail}
@@ -230,7 +230,7 @@ const useStyles = makeStyles(theme => ({
         },
         form: {
             height: '100%',
-            padding: '1rem',
+            padding: '1.5rem',
             borderRadius: '0.5rem 0.5rem 0 0',
         },
         textfield: {

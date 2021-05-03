@@ -72,11 +72,11 @@ export default function SignUp() {
                 <CssBaseline />
                 <div className={classes.wrapper}>
                     <form className={classes.form} onSubmit={handleSubmit} >
-                        <Typography className={classes.title} variant="h5">{"Sign up for your account"}</Typography>
+                        <Typography paragraph className={classes.title} variant="h5">{"Sign up for your account"}</Typography>
                         <TextField
                             className={classes.textfield}
                             variant="outlined" margin="normal" fullWidth
-                            label="Email Address"
+                            label="Email address"
                             type="email" name="email" value={email}
                             onChange={changeEmail}
                             autoFocus required />
@@ -97,7 +97,7 @@ export default function SignUp() {
                         <TextField
                             className={classes.textfield}
                             variant="outlined" margin="normal" fullWidth
-                            label="Confirm Password"
+                            label="Confirm password"
                             type="password" name="confirmPassword" value={confirmPassword}
                             onChange={changeConfirmPassword}
                             required />
@@ -259,7 +259,7 @@ const useStyles = makeStyles(theme => ({
             margin: 'auto 0 0 0',
         },
         form: {
-            padding: '1rem',
+            padding: '1.5rem',
             borderRadius: '0.5rem 0.5rem 0 0',
         },
         textfield:{
