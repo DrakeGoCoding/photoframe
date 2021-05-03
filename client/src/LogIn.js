@@ -45,6 +45,7 @@ export default function LogIn() {
                     <form className={classes.form} onSubmit={handleSubmit}>
                         <Typography className={classes.title} variant="h5">{"Login"}</Typography>
                         <TextField
+                            className={classes.textfield}
                             variant="outlined"
                             margin="normal"
                             type="email"
@@ -57,6 +58,7 @@ export default function LogIn() {
                             autoComplete="email"
                             autoFocus />
                         <TextField
+                            className={classes.textfield}
                             variant="outlined"
                             margin="normal"
                             type="password"
@@ -76,7 +78,7 @@ export default function LogIn() {
                             className={classes.submit}>{"Log in"}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
-                            <hr />OR<hr />
+                            <hr className={classes.separator} />OR<hr className={classes.separator} />
                         </div>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -114,7 +116,7 @@ export default function LogIn() {
                                 />
                             </Grid>
                         </Grid>
-                        <hr />
+                        <hr className={classes.separator} />
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">{'Forgot password?'}</Link>
@@ -210,6 +212,15 @@ const useStyles = makeStyles(theme => ({
         backgroundImage: `url(${FacebookIcon})`,
         fontSize: '1rem',
     },
+    separator: {
+        display: 'block',
+        height: '1px',
+        border: '0',
+        borderTop: '1px solid hsl(0, 0%, 90%)',
+        margin: '1em 0',
+        padding: '0',
+        flex: '1 0',
+    },
     '@media (max-width: 600px)': {
         container: {
             padding: '0',
@@ -218,8 +229,19 @@ const useStyles = makeStyles(theme => ({
             margin: 'auto 0 0 0',
         },
         form: {
+            height: '100%',
             padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
+        },
+        textfield: {
+            margin: '0.5rem 0'
+        },
+        methodSeparator: {
+            margin: '0'
+        },
+        separator: {
+            marginTop: '2rem',
+            marginBottom: '2rem',
         },
         footer: {
             display: 'none',

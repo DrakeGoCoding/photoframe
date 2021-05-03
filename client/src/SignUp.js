@@ -115,7 +115,7 @@ export default function SignUp() {
                             className={classes.submit}>{"Sign Up"}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
-                            <hr />OR<hr />
+                            <hr className={classes.separator}/>OR<hr className={classes.separator}/>
                         </div>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -153,7 +153,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                         </Grid>
-                        <hr />
+                        <hr className={classes.separator}/>
                         <Link href="#" variant="body2" align="center">{"Already have an account? Log in"}</Link>
                     </form>
                 </div>
@@ -242,6 +242,15 @@ const useStyles = makeStyles(theme => ({
         backgroundImage: `url(${FacebookIcon})`,
         fontSize: '1rem',
     },
+    separator: {
+        display: 'block',
+        height: '1px',
+        border: '0',
+        borderTop: '1px solid hsl(0, 0%, 90%)',
+        margin: '1em 0',
+        padding: '0',
+        flex: '1 0',
+    },
     '@media (max-width: 600px)': {
         container: {
             padding: '0',
@@ -255,6 +264,13 @@ const useStyles = makeStyles(theme => ({
         },
         textfield:{
             margin: '0.5rem 0'
+        },
+        methodSeparator: {
+            margin: '0'
+        },
+        separator: {
+            marginTop: '2rem',
+            marginBottom: '2rem',
         },
         footer: {
             display: 'none',
