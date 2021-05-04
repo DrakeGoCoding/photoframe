@@ -1,125 +1,215 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@material-ui/core'
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import Alert from './Alert'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
-import { fadeInRight } from 'react-animations'
+
+import { checkPassword } from './utils'
 
 import BackgroundImage from './assets/bg.jpg'
 
 export default function ResetPassword() {
-    const [email, setEmail] = useState('')
-    const [emailSent, setEmailSent] = useState(true)
-    const [code, setCode] = useState('')
-    const [codeChecked, setCodeChecked] = useState(true)
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [alertMessage, setAlertMessage] = useState('')
-
-    const changeEmail = e => setEmail(e.target.value)
-    const changeCode = otp => setCode(otp)
-    const changePassword = e => setPassword(e.target.value)
-    const changeConfirmPassword = e => setConfirmPassword(e.target.value)
-
-    const handleSubmit = e => {
-        e.preventDefault()
-
-    }
-
-    const countDownOTP = (props) => {
-        return <Typography variant="subtitle2">
-            {!props.completed
-                ? `Resend code in ${props.total / 1000 - 1}s`
-                : <>
-                    Didn't get the code?&nbsp;
-                    <Link href="#" variant="body2">Resend code</Link>
-                </>}
-        </Typography>
-    }
-
     const classes = useStyles()
+
+    const [emailChecked, setEmailChecked] = useState(false)
+    const [codeChecked, setCodeChecked] = useState(false)
+
+    const backtoEmail = e => {
+        e.preventDefault();
+        setEmailChecked(false);
+    }
+    const backtoLogin = e => {
+        e.preventDefault();
+        console.log("Back to log in");
+    }
+
+    const Email = () => {
+        const [email, setEmail] = useState('')
+        const [alert, setAlert] = useState('')
+
+        const changeEmail = e => setEmail(e.target.value)
+
+        const submitEmail = e => {
+            e.preventDefault()
+            try {
+                setEmailChecked(true);
+                console.log({ email });
+            } catch (error) {
+                setAlert(error.response.data.error);
+            }
+        }
+        return (
+            <form className={classes.form} onSubmit={submitEmail}>
+                <Typography paragraph className={classes.title} variant="h5">{"Forgotten your password?"}</Typography>
+                <Typography variant="subtitle2">{"Don't worry, we'll send you an email to help you reset your password."}</Typography>
+                <TextField
+                    className={classes.textfield}
+                    variant="outlined" margin="normal" fullWidth
+                    type="email" label="Email address" name="email"
+                    value={email} onChange={changeEmail}
+                    autoComplete="email" autoFocus required
+                    error={alert.length > 0}
+                    helperText={alert} />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}>{"Continue"}
+                </Button>
+                <Link href="" variant="body2" align="center" onClick={backtoLogin}>{"Return to log in"}</Link>
+            </form>
+        )
+    }
+
+    const Code = () => {
+        const CODE_LENGTH = 6
+
+        const [code, setCode] = useState('')
+        const [alert, setAlert] = useState('')
+
+        const changeCode = value => setCode(value)
+
+        const submitCode = e => {
+            e.preventDefault()
+            try {
+                setCodeChecked(true)
+                console.log({ code });
+            } catch (error) {
+                setAlert(error.response.data.error);
+            }
+        }
+
+        const CountDownOTP = (props) => {
+            return <Typography variant="subtitle2">
+                {!props.completed
+                    ? `Resend code in ${props.total / 1000 - 1}s`
+                    : <>
+                        Didn't get the code?&nbsp;
+                    <Link href="#" variant="body2">Resend code</Link>
+                    </>}
+            </Typography>
+        }
+
+        return (
+            <form className={classes.form} onSubmit={submitCode}>
+                <Typography paragraph className={classes.title} variant="h5">{"Ok, we sent you a code!"}</Typography>
+                <Typography paragraph variant="subtitle2">{`Please enter the code we sent to within the next 10 minutes.`}</Typography>
+                <OtpInput
+                    containerStyle={classes.code}
+                    inputStyle={classes.codeDigit}
+                    focusStyle={classes.codeDigitFocus}
+                    value={code} onChange={changeCode} numInputs={CODE_LENGTH}
+                    isInputNum shouldAutoFocus hasErrored={alert.length > 0} />
+                {alert && <Alert message={alert} />}
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}>{"Continue"}
+                </Button>
+                <Grid container>
+                    <Grid item xs>
+                        <Link href="" variant="body2" onClick={backtoEmail}>{'Back'}</Link>
+                    </Grid>
+                    <Grid item>
+                        <Countdown date={Date.now() + 60000} renderer={CountDownOTP} />
+                    </Grid>
+                </Grid>
+            </form>
+        )
+    }
+
+    const Reset = () => {
+        const [password, setPassword] = useState('')
+        const [confirmPassword, setConfirmPassword] = useState('')
+        const [passwordShown, setPasswordShown] = useState(false)
+
+        const [passwordAlert, setPasswordAlert] = useState('')
+        const [confirmPasswordAlert, setConfirmPasswordAlert] = useState('')
+
+        const changePassword = e => {
+            const input = e.target.value
+            setPassword(input)
+            !checkPassword(input)
+                ? setPasswordAlert('Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
+                : setPasswordAlert('')
+        }
+        const changeConfirmPassword = e => {
+            const input = e.target.value
+            setConfirmPassword(input)
+            password.localeCompare(input)
+                ? setConfirmPasswordAlert('Password mismatch.')
+                : setConfirmPasswordAlert('')
+        }
+        const submitPassword = e => {
+            e.preventDefault()
+            console.log({ password });
+            console.log('Back to log in');
+        }
+
+        const togglePasswordVisibility = e => {
+            e.preventDefault()
+            setPasswordShown(!passwordShown)
+        }
+
+        return (
+            <form className={classes.form} onSubmit={submitPassword}>
+                <Typography paragraph className={classes.title} variant="h5">{"Reset your password"}</Typography>
+                <Typography variant="subtitle2">{`Please set a new password for your account.`}</Typography>
+                <TextField
+                    className={classes.textfield}
+                    variant="outlined" margin="normal" fullWidth
+                    label="New password"
+                    type={passwordShown ? "text" : "password"} name="password" value={password}
+                    onChange={changePassword}
+                    autoFocus required
+                    error={passwordAlert.length > 0}
+                    helperText={passwordAlert}
+                    InputProps={{
+                        endAdornment:
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={togglePasswordVisibility}>
+                                    {passwordShown ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                    }}/>
+                <TextField
+                    className={classes.textfield}
+                    variant="outlined" margin="normal" fullWidth
+                    label="Confirm new password"
+                    type={passwordShown ? "text" : "password"} name="confirmPassword" value={confirmPassword}
+                    onChange={changeConfirmPassword}
+                    required
+                    error={confirmPasswordAlert.length > 0}
+                    helperText={confirmPasswordAlert}/>
+                <Button
+                    className={classes.submit}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary">{"Set password"}
+                </Button>
+            </form>
+        )
+    }
+
     return (
         <div className={classes.background}>
             <Container component="main" maxWidth="sm" className={classes.container}>
                 <CssBaseline />
                 <div className={classes.wrapper}>
-                    <form className={classes.form} onSubmit={handleSubmit} style={fadeInRight}>
-                        {!emailSent ?
-                            <>
-                                <Typography paragraph className={classes.title} variant="h5">{"Forgotten your password?"}</Typography>
-                                <Typography variant="subtitle2">{"Don't worry, we'll send you an email to help you reset your password."}</Typography>
-                                <TextField
-                                    className={classes.textfield}
-                                    variant="outlined" margin="normal" fullWidth
-                                    type="email" label="Email address" name="email"
-                                    value={email} onChange={changeEmail}
-                                    autoComplete="email" autoFocus required />
-                                {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}>{"Continue"}
-                                </Button>
-                                <hr className={classes.separator} />
-                                <Link href="#" variant="body2" align="center">{"Return to log in"}</Link>
-                            </> :
-                            !codeChecked ?
-                                <>
-                                    <Typography paragraph className={classes.title} variant="h5">{"Ok, we sent you a code!"}</Typography>
-                                    <Typography paragraph variant="subtitle2">{`Please enter the code we sent to ${email} within the next 10 minutes.`}</Typography>
-                                    <OtpInput
-                                        containerStyle={classes.code}
-                                        inputStyle={classes.codeDigit}
-                                        value={code} onChange={changeCode} numInputs={6}
-                                        isInputNum shouldAutoFocus />
-                                    {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.submit}>{"Continue"}
-                                    </Button>
-                                    <hr className={classes.separator} />
-                                    <Grid container>
-                                        <Grid item xs>
-                                            <Link href="#" variant="body2">{'Back'}</Link>
-                                        </Grid>
-                                        <Grid item>
-                                            <Countdown date={Date.now() + 60000} renderer={countDownOTP} />
-                                        </Grid>
-                                    </Grid>
-                                </> :
-                                <>
-                                    <Typography paragraph className={classes.title} variant="h5">{"Reset your password"}</Typography>
-                                    <Typography variant="subtitle2">{`Please set a new password for your account.`}</Typography>
-                                    <TextField
-                                        className={classes.textfield}
-                                        variant="outlined" margin="normal" fullWidth
-                                        label="New password"
-                                        type="password" name="password" value={password}
-                                        onChange={changePassword}
-                                        required />
-                                    <TextField
-                                        className={classes.textfield}
-                                        variant="outlined" margin="normal" fullWidth
-                                        label="Confirm new password"
-                                        type="password" name="confirmPassword" value={confirmPassword}
-                                        onChange={changeConfirmPassword}
-                                        required />
-                                    {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.submit}>{"Set password"}
-                                    </Button>
-                                </>}
-                    </form>
+                    {!emailChecked
+                        ? <Email />
+                        : !codeChecked
+                            ? <Code />
+                            : <Reset />
+                    }
                 </div>
                 <Box className={classes.footer} p={2}>
                     <Copyright color="#fff" />
@@ -129,7 +219,7 @@ export default function ResetPassword() {
     )
 }
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" align="center" style={{ color: 'white' }}>
             {'Copyright © '}
@@ -162,6 +252,7 @@ const useStyles = makeStyles(theme => ({
     },
     wrapper: {
         margin: 'auto',
+        width: '100%',
     },
     form: {
         width: '100%',
@@ -169,7 +260,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
-        minWidth: '320px'
+        minWidth: '320px',
     },
     title: {
         fontWeight: 'bold',
@@ -178,6 +269,7 @@ const useStyles = makeStyles(theme => ({
     code: {
         display: 'flex',
         justifyContent: 'space-between',
+        marginBottom: theme.spacing(1),
     },
     codeDigit: {
         backgroundColor: '#fff',
@@ -189,8 +281,12 @@ const useStyles = makeStyles(theme => ({
         outline: 'none',
         boxSizing: 'border-box',
     },
+    codeDigitFocus: {
+        border: '1px solid',
+        borderColor: theme.palette.primary.main,
+    },
     submit: {
-        margin: theme.spacing(2, 0, 0, 0),
+        margin: theme.spacing(2, 0, 2, 0),
         fontSize: '1.125rem',
     },
     separator: {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+
 import { Alert } from '@material-ui/lab'
 
 import GoogleLogin from 'react-google-login'
@@ -11,9 +13,12 @@ import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 
 export default function LogIn() {
+    const classes = useStyles()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [alertMessage, setAlertMessage] = useState('');
+    const [passwordShown, setPasswordShown] = useState(false)
 
     const changeEmail = e => setEmail(e.target.value)
     const changePassword = e => setPassword(e.target.value)
@@ -36,7 +41,11 @@ export default function LogIn() {
         console.log(res);
     }
 
-    const classes = useStyles()
+    const togglePasswordVisibility = e => {
+        e.preventDefault()
+        setPasswordShown(!passwordShown)
+    }
+
     return (
         <div className={classes.background}>
             <Container component="main" maxWidth="sm" className={classes.container}>
@@ -61,14 +70,24 @@ export default function LogIn() {
                             className={classes.textfield}
                             variant="outlined"
                             margin="normal"
-                            type="password"
+                            type={passwordShown ? "text": "password"}
                             required
                             fullWidth
                             label="Password"
                             name="password"
                             value={password}
                             onChange={changePassword}
-                            autoComplete="current-password" />
+                            autoComplete="current-password"
+                            InputProps={{
+                                endAdornment:
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={togglePasswordVisibility}>
+                                            {passwordShown ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                            }} />
                         {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
                         <Button
                             type="submit"
@@ -168,6 +187,7 @@ const useStyles = makeStyles(theme => ({
     },
     wrapper: {
         margin: 'auto',
+        width: '100%',
     },
     form: {
         width: '100%',

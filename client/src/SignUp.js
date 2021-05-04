@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab'
 
 import GoogleLogin from 'react-google-login'
@@ -15,6 +16,7 @@ export default function SignUp() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [passwordShown, setPasswordShown] = useState(false)
     const [alertMessage, setAlertMessage] = useState('');
 
     const changeName = e => setName(e.target.value)
@@ -52,7 +54,7 @@ export default function SignUp() {
         return true;
     }
 
-    const checkName = () => name.length >= 3 && name.length <= 50
+    const checkName = () => name.trim().length > 0
     const checkEmail = () => email.length <= 50
     const checkPassword = () => password.length >= 6
     const checkConfirmPassword = () => confirmPassword.localeCompare(password) === 0
@@ -63,6 +65,11 @@ export default function SignUp() {
 
     const responseFacebook = res => {
         console.log(res);
+    }
+
+    const togglePasswordVisibility = e => {
+        e.preventDefault()
+        setPasswordShown(!passwordShown)
     }
 
     const classes = useStyles();
@@ -91,14 +98,24 @@ export default function SignUp() {
                             className={classes.textfield}
                             variant="outlined" margin="normal" fullWidth
                             label="Password"
-                            type="password" name="password" value={password}
+                            type={passwordShown ? "text" : "password"} name="password" value={password}
                             onChange={changePassword}
+                            InputProps={{
+                                endAdornment:
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={togglePasswordVisibility}>
+                                            {passwordShown ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                            }}
                             required />
                         <TextField
                             className={classes.textfield}
                             variant="outlined" margin="normal" fullWidth
                             label="Confirm password"
-                            type="password" name="confirmPassword" value={confirmPassword}
+                            type={passwordShown ? "text" : "password"} name="confirmPassword" value={confirmPassword}
                             onChange={changeConfirmPassword}
                             required />
                         {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
@@ -115,7 +132,7 @@ export default function SignUp() {
                             className={classes.submit}>{"Sign Up"}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
-                            <hr className={classes.separator}/>OR<hr className={classes.separator}/>
+                            <hr className={classes.separator} />OR<hr className={classes.separator} />
                         </div>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -153,7 +170,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                         </Grid>
-                        <hr className={classes.separator}/>
+                        <hr className={classes.separator} />
                         <Link href="#" variant="body2" align="center">{"Already have an account? Log in"}</Link>
                     </form>
                 </div>
@@ -198,6 +215,7 @@ const useStyles = makeStyles(theme => ({
     },
     wrapper: {
         margin: 'auto',
+        width: '100%',
     },
     form: {
         width: '100%',
@@ -262,15 +280,15 @@ const useStyles = makeStyles(theme => ({
             padding: '1.5rem',
             borderRadius: '0.5rem 0.5rem 0 0',
         },
-        textfield:{
+        textfield: {
             margin: '0.5rem 0'
         },
         methodSeparator: {
             margin: '0'
         },
         separator: {
-            marginTop: '2rem',
-            marginBottom: '2rem',
+            marginTop: '1rem',
+            marginBottom: '1rem',
         },
         footer: {
             display: 'none',
