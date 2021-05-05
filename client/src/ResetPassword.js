@@ -6,9 +6,9 @@ import Alert from './Alert'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
 
-import { checkPassword } from './utils'
-
 import BackgroundImage from './assets/bg.jpg'
+
+import { checkPassword } from './utils'
 
 export default function ResetPassword() {
     const classes = useStyles()
@@ -184,8 +184,7 @@ export default function ResetPassword() {
                     variant="outlined" margin="normal" fullWidth
                     label="Confirm new password"
                     type={passwordShown ? "text" : "password"} name="confirmPassword" value={confirmPassword}
-                    onChange={changeConfirmPassword}
-                    required
+                    onChange={changeConfirmPassword} required
                     error={confirmPasswordAlert.length > 0}
                     helperText={confirmPasswordAlert}/>
                 <Button

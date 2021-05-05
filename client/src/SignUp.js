@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab'
+import Alert from './Alert'
 
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -11,18 +11,49 @@ import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 
+import { checkName, checkEmail, checkPassword } from './utils'
+
 export default function SignUp() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordShown, setPasswordShown] = useState(false)
-    const [alertMessage, setAlertMessage] = useState('');
+    const [alertMessage, setAlertMessage] = useState('')
 
-    const changeName = e => setName(e.target.value)
-    const changeEmail = e => setEmail(e.target.value)
-    const changePassword = e => setPassword(e.target.value)
-    const changeConfirmPassword = e => setConfirmPassword(e.target.value)
+    const [nameAlert, setNameAlert] = useState('');
+    const [emailAlert, setEmailAlert] = useState('');
+    const [passwordAlert, setPasswordAlert] = useState('')
+    const [confirmPasswordAlert, setConfirmPasswordAlert] = useState('')
+
+    const changeName = e => {
+        const input = e.target.value
+        setName(input)
+        !checkName(input)
+            ? setNameAlert('Please enter your name.')
+            : setNameAlert('')
+    }
+    const changeEmail = e => {
+        const input = e.target.value
+        setEmail(input)
+        !checkEmail(input)
+            ? setEmailAlert('Please enter your email.')
+            : setEmailAlert('')
+    }
+    const changePassword = e => {
+        const input = e.target.value
+        setPassword(input)
+        !checkPassword(input)
+            ? setPasswordAlert('Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
+            : setPasswordAlert('')
+    }
+    const changeConfirmPassword = e => {
+        const input = e.target.value
+        setConfirmPassword(input)
+        password.localeCompare(input)
+            ? setConfirmPasswordAlert('Password mismatch.')
+            : setConfirmPasswordAlert('')
+    }
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -30,34 +61,27 @@ export default function SignUp() {
             const account = { name, email, password }
             checkInput() && console.log(account);
         } catch (error) {
-
+            setAlertMessage(error.response.data.error)
         }
     }
 
     const checkInput = () => {
-        if (!checkName()) {
-            setAlertMessage('Your name should be 3-50 characters.');
+        if (!checkName(name)) {
             return false;
         }
-        if (!checkEmail()) {
-            setAlertMessage('Your email should be at most 50 characters.');
+        if (!checkEmail(email)) {
             return false;
         }
-        if (!checkPassword()) {
-            setAlertMessage('Your password should be at least 6 characters.');
+        if (!checkPassword(password)) {
             return false;
         }
-        if (!checkConfirmPassword()) {
-            setAlertMessage('Password mismatch');
+        if (!checkConfirmPassword(confirmPassword)) {
             return false;
         }
         return true;
     }
 
-    const checkName = () => name.trim().length > 0
-    const checkEmail = () => email.length <= 50
-    const checkPassword = () => password.length >= 6
-    const checkConfirmPassword = () => confirmPassword.localeCompare(password) === 0
+    const checkConfirmPassword = (input) => input.localeCompare(password) === 0
 
     const responseGoogle = res => {
         console.log(res.profileObj);
@@ -86,6 +110,8 @@ export default function SignUp() {
                             label="Email address"
                             type="email" name="email" value={email}
                             onChange={changeEmail}
+                            error={emailAlert.length > 0}
+                            helperText={emailAlert}
                             autoFocus required />
                         <TextField
                             className={classes.textfield}
@@ -93,6 +119,8 @@ export default function SignUp() {
                             label="Your name"
                             type="text" name="name" value={name}
                             onChange={changeName}
+                            error={nameAlert.length > 0}
+                            helperText={nameAlert}
                             required />
                         <TextField
                             className={classes.textfield}
@@ -100,6 +128,8 @@ export default function SignUp() {
                             label="Password"
                             type={passwordShown ? "text" : "password"} name="password" value={password}
                             onChange={changePassword}
+                            error={passwordAlert.length > 0}
+                            helperText={passwordAlert}
                             InputProps={{
                                 endAdornment:
                                     <InputAdornment position="end">
@@ -116,9 +146,10 @@ export default function SignUp() {
                             variant="outlined" margin="normal" fullWidth
                             label="Confirm password"
                             type={passwordShown ? "text" : "password"} name="confirmPassword" value={confirmPassword}
-                            onChange={changeConfirmPassword}
-                            required />
-                        {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
+                            onChange={changeConfirmPassword} required
+                            error={confirmPasswordAlert.length > 0}
+                            helperText={confirmPasswordAlert} />
+                        {alertMessage && <Alert message={alertMessage} />}
                         <Typography variant="caption">
                             By signing up, you confirm that you've read and accepted our&nbsp;
                             <Link href="#">Terms of Services</Link>&nbsp;and &nbsp;

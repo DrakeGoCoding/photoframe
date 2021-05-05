@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-
-import { Alert } from '@material-ui/lab'
+import Alert from './Alert'
 
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -88,7 +87,7 @@ export default function LogIn() {
                                         </IconButton>
                                     </InputAdornment>
                             }} />
-                        {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
+                        {alertMessage && <Alert message={alertMessage} />}
                         <Button
                             type="submit"
                             fullWidth
