@@ -15,14 +15,21 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const useStyles = makeStyles((theme) => ({
     menuIconContainer: {
         marginLeft: 'auto'
+    },
+    listItem:{
+        color: 'black',
+        '&:hover': {
+            backgroundColor: '#12a0d0',
+            color: '#fefefe'
+    }
     }
 }))
 
 export default function DrawerComponent() {
 
-    const [openDrawer, setOpenDrawer] = useState(true);
+    const [openDrawer, setOpenDrawer] = useState(false);
     const classes = useStyles();
-    const [login, setLogin] = useState(false)
+    const [login, setLogin] = useState(true)
 
     return (
         <>
@@ -31,21 +38,21 @@ export default function DrawerComponent() {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}>
                 <List>
-                    <ListItem button>
+                    <ListItem button className={classes.listItem}>
                         <ListItemIcon >
                             <MailIcon />
                         </ListItemIcon>
-                        <ListItemText>CONTACT</ListItemText>
+                        <ListItemText>ABOUT</ListItemText>
                     </ListItem>
                     {login ? (
                         <>
-                            <ListItem button>
+                            <ListItem button className={classes.listItem}>
                                 <ListItemIcon >
                                     <AssignmentIndIcon />
                                 </ListItemIcon>
                                 <ListItemText>ACCOUNT</ListItemText>
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button className={classes.listItem}>
                                 <ListItemIcon >
                                     <ExitToAppIcon />
                                 </ListItemIcon>
@@ -53,7 +60,7 @@ export default function DrawerComponent() {
                             </ListItem>
                         </>
                     ) : (
-                        <ListItem button>
+                        <ListItem button className={classes.listItem}>
                             <ListItemIcon >
                                 <AssignmentIndIcon />
                             </ListItemIcon>
