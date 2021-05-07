@@ -60,7 +60,7 @@ export default function SignUp() {
         }
         await submitAccount(account)
     }
-    
+
     const submitAccount = async (account) => {
         try {
             setLoading(true)
@@ -91,7 +91,7 @@ export default function SignUp() {
         await submitAccount(account)
     }
 
-    const responseFacebook = async(res) => {
+    const responseFacebook = async (res) => {
         const account = {
             name: res.name,
             email: res.email,
@@ -103,6 +103,32 @@ export default function SignUp() {
     const togglePasswordVisibility = e => {
         e.preventDefault()
         setPasswordShown(!passwordShown)
+    }
+
+    const renderGoogleBtn = (renderProps) => {
+        return (
+            <Button
+                className={classes.methodBtn}
+                onClick={renderProps.onClick}
+                fullWidth
+                variant="contained">
+                <Icon className={classes.googleIcon}></Icon>
+                &nbsp;Continue with Google
+            </Button>
+        )
+    }
+
+    const renderFacebookBtn = (renderProps) => {
+        return (
+            <Button
+                className={classes.methodBtn}
+                fullWidth
+                variant="contained"
+                onClick={renderProps.onClick}>
+                <Icon className={classes.facebookIcon}></Icon>
+                &nbsp;Continue with Facebook
+            </Button>
+        )
     }
 
     const classes = useStyles();
@@ -179,16 +205,7 @@ export default function SignUp() {
                             <Grid item xs={12}>
                                 <GoogleLogin
                                     clientId="754246735652-rt5pm47ctndoeonb3qcehaeh1krri2j4.apps.googleusercontent.com"
-                                    render={renderProps => (
-                                        <Button
-                                            className={classes.methodBtn}
-                                            onClick={renderProps.onClick}
-                                            fullWidth
-                                            variant="contained">
-                                            <Icon className={classes.googleIcon}></Icon>
-                                            &nbsp;Continue with Google
-                                        </Button>
-                                    )}
+                                    render={renderGoogleBtn}
                                     onSuccess={responseGoogle}
                                     onFailure={responseGoogle}
                                     cookiePolicy={'single_host_origin'} />
@@ -196,19 +213,9 @@ export default function SignUp() {
                             <Grid item xs={12}>
                                 <FacebookLogin
                                     appId="529841281727853"
+                                    render={renderFacebookBtn}
                                     callback={responseFacebook}
-                                    fields="name,email,picture"
-                                    render={renderProps => (
-                                        <Button
-                                            className={classes.methodBtn}
-                                            fullWidth
-                                            variant="contained"
-                                            onClick={renderProps.onClick}>
-                                            <Icon className={classes.facebookIcon}></Icon>
-                                            &nbsp;Continue with Facebook
-                                        </Button>
-                                    )}
-                                />
+                                    fields="name,email,picture" />
                             </Grid>
                         </Grid>
                         <hr className={classes.separator} />
@@ -223,7 +230,7 @@ export default function SignUp() {
     )
 }
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" align="center" style={{ color: 'white' }}>
             {'Copyright © '}
