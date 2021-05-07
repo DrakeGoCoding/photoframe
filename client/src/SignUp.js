@@ -33,30 +33,22 @@ export default function SignUp() {
     const changeName = e => {
         const input = e.target.value
         setName(input)
-        !checkName(input)
-            ? setNameAlert('Please enter your name.')
-            : setNameAlert('')
+        setNameAlert(checkName(input) ? '' : 'Please enter your name.')
     }
     const changeEmail = e => {
         const input = e.target.value
         setEmail(input)
-        !checkEmail(input)
-            ? setEmailAlert('Please enter your email.')
-            : setEmailAlert('')
+        setEmailAlert(checkEmail(input) ? '' : 'Please enter your email.')
     }
     const changePassword = e => {
         const input = e.target.value
         setPassword(input)
-        !checkPassword(input)
-            ? setPasswordAlert('Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
-            : setPasswordAlert('')
+        setPasswordAlert(checkPassword(input) ? '' : 'Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
     }
     const changeConfirmPassword = e => {
         const input = e.target.value
         setConfirmPassword(input)
-        !checkConfirmPassword(input)
-            ? setConfirmPasswordAlert('Password mismatch.')
-            : setConfirmPasswordAlert('')
+        setConfirmPasswordAlert(checkConfirmPassword(input) ? '' : 'Password mismatch')
     }
 
     const handleSubmit = async (e) => {
@@ -66,6 +58,10 @@ export default function SignUp() {
             setAlertMessage("Invalid input.");
             return;
         }
+        await submitAccount(account)
+    }
+    
+    const submitAccount = async (account) => {
         try {
             setLoading(true)
             setAlertMessage('')
@@ -81,20 +77,27 @@ export default function SignUp() {
     }
 
     const checkInput = () => {
-        if (!checkName(name) || !checkEmail(email) || !checkPassword(password) || !checkConfirmPassword(confirmPassword)) {
-            return false;
-        }
-        return true;
+        return checkName(name) && checkEmail(email) && checkPassword(password) && checkConfirmPassword(confirmPassword)
     }
 
     const checkConfirmPassword = (input) => input.localeCompare(password) === 0
 
-    const responseGoogle = res => {
-        console.log(res.profileObj);
+    const responseGoogle = async (res) => {
+        const account = {
+            name: res.profileObj.name,
+            email: res.profileObj.email,
+            password: res.profileObj.googleId
+        }
+        await submitAccount(account)
     }
 
-    const responseFacebook = res => {
-        console.log(res);
+    const responseFacebook = async(res) => {
+        const account = {
+            name: res.name,
+            email: res.email,
+            password: res.userID,
+        }
+        await submitAccount(account)
     }
 
     const togglePasswordVisibility = e => {
@@ -194,7 +197,7 @@ export default function SignUp() {
                                 <FacebookLogin
                                     appId="529841281727853"
                                     callback={responseFacebook}
-                                    scope="public_profile,email"
+                                    fields="name,email,picture"
                                     render={renderProps => (
                                         <Button
                                             className={classes.methodBtn}

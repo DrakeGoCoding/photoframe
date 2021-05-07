@@ -9,7 +9,7 @@ const otpGenerator = require('otp-generator')
 const signup = async (data) => {
     let user = await User.findOne({ email: data.email })
     if (user)
-        throw new Error("Email already exists. Please try another.")
+        throw new Error(`Email ${data.email} has already been used. Please try another.`)
 
     user = new User(data)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
@@ -26,7 +26,7 @@ const signup = async (data) => {
 const requestPasswordReset = async (email) => {
     const user = await User.findOne({ email })
     if (!user)
-        throw new Error("Email does not exist")
+        throw new Error(`Email ${email} does not exist.`)
 
     const token = await Token.findOne({ userId: user._id })
     if (token) await token.deleteOne()
@@ -56,11 +56,11 @@ const requestPasswordReset = async (email) => {
 const resetPassword = async (userId, code, password) => {
     const passwordResetToken = await Token.findOne({ userId })
     if (!passwordResetToken)
-        throw new Error("Invalid or expired password reset token")
+        throw new Error("Invalid or expired password reset token.")
 
     const isValid = await bcrypt.compare(code, passwordResetToken.code)
     if (!isValid)
-        throw new Error("Invalid or expired password reset token")
+        throw new Error("Invalid or expired password reset token.")
 
     const hash = await bcrypt.hash(password, Number(process.env.SALT_ROUNDS))
 
