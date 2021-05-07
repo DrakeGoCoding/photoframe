@@ -21,6 +21,6 @@ app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message })
 })
 
-app.listen(port, () => { console.log('Listening to port: ' + port) })
+app.listen(port, () => { console.log('Listening to port:' + port) })
 
 module.exports = app
