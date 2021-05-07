@@ -32,11 +32,11 @@ const requestPasswordReset = async (email) => {
     if (token) await token.deleteOne()
 
     const resetCode = otpGenerator.generate(6, { digits: true })
-    const hash = await bcrypt.hash(resetCode, Number(process.env.SALT_ROUNDS))
+    // const hash = await bcrypt.hash(resetCode, Number(process.env.SALT_ROUNDS))
 
     await new Token({
         userId: user._id,
-        code: hash,
+        code: resetCode,
         createdAt: Date.now(),
     }).save()
 
@@ -45,7 +45,7 @@ const requestPasswordReset = async (email) => {
         "Password Reset Request",
         {
             name: user.name,
-            code: code,
+            code: resetCode,
         },
         "./template/requestResetPassword.handlebars"
     )

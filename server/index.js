@@ -16,11 +16,11 @@ db()
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// app.use("/api/v1", require("./routes/index.route"));
+app.use("/auth", require("./routes/authRoute"));
 app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message })
 })
 
-app.listen(port, () => { console.log('Listening to port' + port) })
+app.listen(port, () => { console.log('Listening to port: ' + port) })
 
 module.exports = app

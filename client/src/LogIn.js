@@ -101,7 +101,7 @@ export default function LogIn() {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <GoogleLogin
-                                    clientId="850972548288-5kc5bd9okqa0enotpcpo021tg779s2si.apps.googleusercontent.com"
+                                    clientId="754246735652-rt5pm47ctndoeonb3qcehaeh1krri2j4.apps.googleusercontent.com"
                                     render={renderProps => (
                                         <Button
                                             className={classes.methodBtn}
