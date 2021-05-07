@@ -5,10 +5,16 @@ import {
     Button,
     ButtonGroup,
     Grid,
+    GridList,
+    GridListTile,
+    GridListTileBar,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    IconButton
 } from '@material-ui/core';
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
+import InfoIcon from '@material-ui/icons/Info';
+import dataImages from './dataImg.json'
 
 import pic1 from './assets/bg.jpg'
 import pic2 from './assets/bg1.jpg'
@@ -26,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
     },
     box1: {
         height: 'auto',
-        width: 'auto'
+        width: 'auto',
+
     },
     btnEditYourPhoto: {
         color: '#079de0',
@@ -71,20 +78,34 @@ const useStyles = makeStyles((theme) => ({
 
     //Album 
     album: {
-        width:'100%',
-        paddingBottom: '5%',
-        //height: '300px',
-        backgroundColor:'red'
+        width: '100%',
+        height: 'auto',
+        backgroundColor: '#111418',
+        // borderTop: '1px solid #079de0'
+    },
+    main_album: {
+        width: '90%',
+        height: 'auto',
+        border: '1px dotted #079de0',
+        margin: '10px 0px'
     }
 }))
 
 export default function HomeOffical() {
+    const [login, setLogin] = useState(true)
     return (
         <Grid container direction="column">
             <Grid item >
                 <Nav />
             </Grid>
             <Container1 />
+            {login ? (
+                <Album />
+            ): (
+                <>
+                </>
+            )}
+            
         </Grid>
     )
 }
@@ -98,11 +119,11 @@ const Container1 = () => {
         <>
             {!isMatch ? (
                 <Grid className={classes.box} container wrap direction="row" alignItems='center' justify='space-around'>
-                    <Grid container justify="center" alignItems="center" direction="column" style={ {marginLeft: '50px'}, {marginTop: '10px'}} className={classes.box1}>
+                    <Grid container justify="center" alignItems="center" direction="column" style={{ border: '1px solid #079de0', borderRadius: '10px', padding: '19px' }} className={classes.box1}>
                         <Button variant="outlined" color="primary" className={classes.btnEditYourPhoto}>
                             <label style={{ fontSize: "small" }}>Edit your Photo</label>
                         </Button>
-                        <h3 style={{ color: 'white' }}>Make your Photo better</h3>
+                        <p style={{ color: 'white', fontSize: '100%', fontFamily: 'sans-serif' }}>Make your Photo better</p>
                     </Grid>
                     <Grid container className={classes.box2} direction="column" alignItems='center' justify="center" >
                         <Grid item className={classes.box2_1} >
@@ -139,16 +160,133 @@ const Container1 = () => {
                     </Grid>
                 </Grid>
             )}
-            <Album />
         </>
     )
 }
 
 const Album = () => {
     const classes = useStyles();
-    return(
-        <div className={classes.album}>
-            Hello cacs ban
-        </div>
+    const theme = useTheme();
+    const isMatch_md = useMediaQuery(theme.breakpoints.down('md'));
+    const isMatch_sm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMatch_xs = useMediaQuery(theme.breakpoints.down('xs'));
+    return (
+        <>
+            {!isMatch_md ? (
+                <Grid container justify='center' className={classes.album} >
+                    <div className={classes.main_album}>
+                        <IMG5/>
+                    </div>
+                </Grid >
+            ) : ( !isMatch_sm ? (
+                <Grid container justify='center' className={classes.album}>
+                    <div className={classes.main_album}>
+                        <IMG4 />
+                    </div>
+                </Grid>
+            ): ( !isMatch_xs ?(
+                <Grid container justify='center' className={classes.album}>
+                    <div className={classes.main_album}>
+                        <IMG3 />
+                    </div>
+                </Grid>
+            ): (
+                <Grid container justify='center' className={classes.album}>
+                    <div className={classes.main_album}>
+                        <IMG2 />
+                    </div>
+                </Grid>
+            ))
+            
+                
+            )}
+        </>
     )
 }
+
+const IMG5 = () => {
+    return (
+        <GridList cellHeight={240} cols={'5'} >
+            {dataImages.map((data) => (
+                <GridListTile key={data.id}>
+                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
+                    <GridListTileBar
+                        title={data.title}
+                        subtitle={data.description}
+                        style={{ textAlign: 'start' }}
+                        acctionIcon={
+                            <IconButton>
+                                <InfoIcon style={{ color: 'white' }} />
+                            </IconButton>
+                        } />
+                </GridListTile>
+            ))}
+        </GridList>
+    )
+}
+
+const IMG4 = () => {
+    return (
+        <GridList cellHeight={210} cols={'4'} >
+            {dataImages.map((data) => (
+                <GridListTile key={data.id}>
+                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
+                    <GridListTileBar
+                        title={data.title}
+                        subtitle={data.description}
+                        style={{ textAlign: 'start' }}
+                        acctionIcon={
+                            <IconButton>
+                                <InfoIcon style={{ color: 'white' }} />
+                            </IconButton>
+                        } />
+                </GridListTile>
+            ))}
+        </GridList>
+    )
+}
+
+const IMG3 = () => {
+    return (
+        <GridList cellHeight={180} cols={'3'} >
+            {dataImages.map((data) => (
+                <GridListTile key={data.id}>
+                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
+                    <GridListTileBar
+                        title={data.title}
+                        subtitle={data.description}
+                        style={{ textAlign: 'start' }}
+                        acctionIcon={
+                            <IconButton>
+                                <InfoIcon style={{ color: 'white' }} />
+                            </IconButton>
+                        } />
+                </GridListTile>
+            ))}
+        </GridList>
+    )
+}
+
+const IMG2 = () => {
+    return (
+        <GridList cellHeight={150} cols={'2'} >
+            {dataImages.map((data) => (
+                <GridListTile key={data.id}>
+                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
+                    <GridListTileBar
+                        title={data.title}
+                        subtitle={data.description}
+                        style={{ textAlign: 'start' }}
+                        acctionIcon={
+                            <IconButton>
+                                <InfoIcon style={{ color: 'white' }} />
+                            </IconButton>
+                        } />
+                </GridListTile>
+            ))}
+        </GridList>
+    )
+}
+
+
+

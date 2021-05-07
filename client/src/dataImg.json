@@ -4,7 +4,8 @@
         "title": "image 1",
         "description": "Ảnh 1",
         "image": "https://i.pinimg.com/564x/f5/d9/3f/f5d93f808a21444767a043ee20f780ed.jpg"
-    },
+    }
+    ,
     {
         "id": 2,
         "title": "image 2",
