@@ -1,13 +1,13 @@
 import './App.css';
-import Home from './Home';
-import Nav from './Nav'
+//import Nav from './Nav'
+import HomeOffical from './HomeOffical';
 
 
 function App() {
     return (
         <div className="App">
             {/* <Nav /> */}
-            <Home/>
+            <HomeOffical/>
         </div>
     );
 }

@@ -12,16 +12,14 @@ const useStyles = makeStyles((theme) => ({
     },
     bar: {
         background: '#fff',
-        position: 'fixed',
         left: '0',
         right: '0',
         width: 'auto',
         height: 'auto',
-        padding: '10px 10px'
+        padding: '10px 0px 10px 0px'
 
     },
     logoBTN: {
-        maxWidth: '133px',
         width: '133px',
         height: '71px',
         backgroundImage: `url(${logo})`
@@ -33,8 +31,19 @@ const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '18px',
         textTransform: 'none',
-        fontWeight: '400'
-        //fontFamily: 'Open Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif'
+        fontWeight: '400',
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
     },
     btnLogin: {
         color: '#079de0',
@@ -87,7 +96,7 @@ export default function Nav() {
     const theme = useTheme();
     //console.log(theme)
 
-    const isMatch = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'));
     console.log(isMatch)
     return (
         <div className={classes.root}>
