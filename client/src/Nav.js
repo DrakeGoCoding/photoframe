@@ -96,8 +96,8 @@ export default function Nav() {
     const theme = useTheme();
     //console.log(theme)
 
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'));
-    console.log(isMatch)
+    const isMatch = useMediaQuery(theme.breakpoints.down('xs'));
+    //console.log(isMatch)
     return (
         <div className={classes.root}>
             <AppBar className={classes.bar} >
