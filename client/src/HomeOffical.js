@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     btnEditYourPhoto: {
         color: '#079de0',
         maxWidth: '160px',
-        // marginLeft: '40px',
         //textTransform: 'none',
         '&:hover': {
             backgroundColor: '#12a0d0',
@@ -61,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
         color: '#079de0',
         textTransform: 'none',
         '&:hover': {
-            //backgroundColor: '#12a0d0',
             color: '#fefefe'
         }
     },
@@ -131,7 +129,6 @@ const Container1 = () => {
                         <Grid item className={classes.box2_1} >
                             <img src={bgimg} alt="Anh" className={classes.imgBG}></img>
                         </Grid>
-
                         <ButtonGroup className={classes.grBTN} size="small" variant="text" style={{ marginBottom: "5px" }}>
                             <Button className={classes.changeBG} size="small" variant="outlined" color="primary" onMouseEnter={() => { setBgimg(pic1) }}></Button>
                             <Button className={classes.changeBG} size="small" variant="outlined" color="primary" onMouseEnter={() => { setBgimg(pic2) }}></Button>
@@ -142,7 +139,7 @@ const Container1 = () => {
                     </Grid>
                 </Grid>
             )}
-            {/* <Album /> */}
+            <Album />
         </>
     )
 }
