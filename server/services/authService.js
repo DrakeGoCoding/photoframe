@@ -7,9 +7,9 @@ const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator')
 
 const signup = async (data) => {
-    const user = await User.findOne({ email: data.email })
+    let user = await User.findOne({ email: data.email })
     if (user)
-        throw new Error("Email already exists.")
+        throw new Error("Email already exists. Please try another.")
 
     user = new User(data)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)

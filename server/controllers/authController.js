@@ -5,8 +5,12 @@ const {
 } = require('../services/authService')
 
 const signupController = async (req, res, next) => {
-    const signUpService = await signup(req.body)
-    return res.json(signUpService)
+    try {
+        const signUpService = await signup(req.body)
+        return res.json(signUpService)
+    } catch (error) {
+        res.status(404).send({ error: error.message })
+    }
 }
 
 const requestPasswordResetController = async (req, res, next) => {

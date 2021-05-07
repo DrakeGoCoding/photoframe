@@ -5,7 +5,7 @@ export default function Alert(props) {
     const message = props.message;
     return (
         <Typography variant="caption" color="error">
-            {message}
+            <br />{message}
         </Typography>
     )
 }

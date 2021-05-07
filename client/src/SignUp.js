@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from './Alert'
+import Alert from './assets/Alert'
+import Loader from './assets/Loader'
 
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -12,6 +13,7 @@ import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 
 import { checkName, checkEmail, checkPassword } from './utils'
+import { signup } from './Axios';
 
 export default function SignUp() {
     const [name, setName] = useState('')
@@ -19,10 +21,12 @@ export default function SignUp() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordShown, setPasswordShown] = useState(false)
-    const [alertMessage, setAlertMessage] = useState('')
 
-    const [nameAlert, setNameAlert] = useState('');
-    const [emailAlert, setEmailAlert] = useState('');
+    const [loading, setLoading] = useState(false)
+
+    const [alertMessage, setAlertMessage] = useState('')
+    const [nameAlert, setNameAlert] = useState('')
+    const [emailAlert, setEmailAlert] = useState('')
     const [passwordAlert, setPasswordAlert] = useState('')
     const [confirmPasswordAlert, setConfirmPasswordAlert] = useState('')
 
@@ -50,32 +54,34 @@ export default function SignUp() {
     const changeConfirmPassword = e => {
         const input = e.target.value
         setConfirmPassword(input)
-        password.localeCompare(input)
+        !checkConfirmPassword(input)
             ? setConfirmPasswordAlert('Password mismatch.')
             : setConfirmPasswordAlert('')
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        const account = { name, email, password }
+        if (!checkInput()) {
+            setAlertMessage("Invalid input.");
+            return;
+        }
         try {
-            const account = { name, email, password }
-            checkInput() && console.log(account);
+            setLoading(true)
+            setAlertMessage('')
+            const res = await signup(account)
+            setTimeout(() => {
+                console.log(res);
+                setLoading(false);
+            }, 1000)
         } catch (error) {
-            setAlertMessage(error.response.data.error)
+            setAlertMessage(error.response.data.error);
+            setLoading(false);
         }
     }
 
     const checkInput = () => {
-        if (!checkName(name)) {
-            return false;
-        }
-        if (!checkEmail(email)) {
-            return false;
-        }
-        if (!checkPassword(password)) {
-            return false;
-        }
-        if (!checkConfirmPassword(confirmPassword)) {
+        if (!checkName(name) || !checkEmail(email) || !checkPassword(password) || !checkConfirmPassword(confirmPassword)) {
             return false;
         }
         return true;
@@ -149,18 +155,19 @@ export default function SignUp() {
                             onChange={changeConfirmPassword} required
                             error={confirmPasswordAlert.length > 0}
                             helperText={confirmPasswordAlert} />
-                        {alertMessage && <Alert message={alertMessage} />}
                         <Typography variant="caption">
                             By signing up, you confirm that you've read and accepted our&nbsp;
                             <Link href="#">Terms of Services</Link>&nbsp;and &nbsp;
                             <Link href="#">Privacy Policy</Link>.
                         </Typography>
+                        {alertMessage && <Alert message={alertMessage} />}
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.submit}>{"Sign Up"}
+                            className={classes.submit}>
+                            {loading ? <Loader /> : 'Sign up'}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
                             <hr className={classes.separator} />OR<hr className={classes.separator} />
