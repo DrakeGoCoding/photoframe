@@ -14,44 +14,23 @@ const useStyles = makeStyles((theme) => ({
         background: '#fff',
         left: '0',
         right: '0',
-        width: 'auto',
-        height: 'auto',
-        padding: '10px 0px 10px 0px'
+        width: '100%',
+        height:'auto',
+        padding: '10px 0 1% 0'
 
     },
-    logoBTN: {
-        width: '133px',
-        height: '71px',
-        backgroundImage: `url(${logo})`
-    },
+    
     btnAbout: {
-        position: 'absolute',
-        left: '200px',
-        top: '15px',
-        padding: '5px 10px',
-        fontSize: '18px',
+        left: '2.2rem',
+        width: '4rem',
         textTransform: 'none',
-        fontWeight: '400',
-        fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
+        fontFamily: 'sans-serif',
     },
     btnLogin: {
         color: '#079de0',
         position: 'absolute',
-        right: '1%',
-        top: '15px',
-        padding: '5px 20px',
-        fontSize: '18px',
+        right: '2rem',
+        width: '5.9rem',
         textTransform: 'none',
         '&:hover': {
             backgroundColor: '#12a0d0',
@@ -61,10 +40,9 @@ const useStyles = makeStyles((theme) => ({
     btnAccount: {
         color: '#079de0',
         position: 'absolute',
-        right: '120px',
-        top: '15px',
-        padding: '5px 8px',
-        fontSize: '18px',
+        right: '10rem',
+        width: '5.9rem',
+        fontSize:'small',
         textTransform: 'none',
         '&:hover': {
             backgroundColor: '#12a0d0',
@@ -74,10 +52,9 @@ const useStyles = makeStyles((theme) => ({
     btnLogOut: {
         color: '#079de0',
         position: 'absolute',
-        right: '1%',
-        top: '15px',
-        padding: '5px 8px',
-        fontSize: '18px',
+        right: '2rem',
+        width: '5.9rem',
+        fontSize:'small',
         textTransform: 'none',
         '&:hover': {
             backgroundColor: '#12a0d0',
@@ -87,40 +64,30 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-
 export default function Nav() {
 
     const [login, setLogin] = useState(true)
 
     const classes = useStyles();
     const theme = useTheme();
-
     const isMatch = useMediaQuery(theme.breakpoints.down('xs'));
+
     return (
         <div className={classes.root}>
             <AppBar className={classes.bar} >
-                <Toolbar>
-                    <Button className={classes.logoBTN} />
-                    {isMatch ? (
-                        <DrawerComponent />
-                    ) : (
+                <Toolbar >
+                    <img className={classes.logoBTN} onClick={()=> console.log("heelo")} alt="Logo" src={logo} style={{height: 'auto', width: '11%'}} />
+                    {isMatch ? (<><DrawerComponent /></>) 
+                    : (
                         <>
-                            <Button className={classes.btnAbout}>
-                                About
-                            </Button>
+                            <Button className={classes.btnAbout}>About</Button>
                             {login ? (
                                 <>
-                                    <Button variant="outlined" className={classes.btnAccount}>
-                                        ACCOUNT
-                                </Button>
-                                    <Button variant="outlined" className={classes.btnLogOut}>
-                                        LOG OUT
-                                </Button>
-                                </>
-                            ) : (
-                                <Button variant="outlined" color="primary" className={classes.btnLogin}>
-                                    Login
-                                </Button>
+                                <Button variant="outlined" className={classes.btnAccount}>ACCOUNT</Button>
+                                <Button variant="outlined" className={classes.btnLogOut}> LOG OUT</Button>
+                                </>) 
+                            : (
+                                <Button variant="outlined" color="primary" className={classes.btnLogin}>LOGIN</Button>
                             )}
                         </>
                     )}

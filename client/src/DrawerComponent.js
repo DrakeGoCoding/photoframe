@@ -1,27 +1,28 @@
 import React, { useState } from 'react'
-import { makeStyles} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import IconButton from '@material-ui/core/IconButton';
+import {
+    makeStyles,
+    Drawer,
+    List,
+    IconButton,
+    ListItem,
+    ListItemIcon,
+    ListItemText
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
+import MailIcon from '@material-ui/icons/Mail';
 
 const useStyles = makeStyles((theme) => ({
     menuIconContainer: {
         marginLeft: 'auto'
     },
-    listItem:{
+    listItem: {
         color: 'black',
         '&:hover': {
             backgroundColor: '#12a0d0',
             color: '#fefefe'
-    }
+        }
     }
 }))
 
@@ -33,6 +34,7 @@ export default function DrawerComponent() {
 
     return (
         <>
+
             <Drawer
                 anchor='right'
                 onClose={() => setOpenDrawer(false)}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Nav from './Nav'
 import {
     makeStyles,
@@ -25,20 +25,18 @@ import pic5 from './assets/bg4.jpg'
 const useStyles = makeStyles((theme) => ({
     //container
     box: {
-        width: '100vw',
+        width: '100%',
         paddingBottom: '1%',
         backgroundColor: '#111418',
-        marginTop: '91px'
     },
     box1: {
         height: 'auto',
         width: 'auto',
-
+        marginTop: '92px'
     },
     btnEditYourPhoto: {
         color: '#079de0',
         maxWidth: '160px',
-        //textTransform: 'none',
         '&:hover': {
             backgroundColor: '#12a0d0',
             color: '#fefefe'
@@ -51,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         top: '0',
         right: '0',
         bottom: '0',
-        left: '0'
+        left: '0',     
     },
     box2_1: {
         height: '90%',
@@ -81,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: 'auto',
         backgroundColor: '#111418',
-        // borderTop: '1px solid #079de0'
     },
     main_album: {
         width: '90%',
@@ -99,13 +96,7 @@ export default function HomeOffical() {
                 <Nav />
             </Grid>
             <Container1 />
-            {login ? (
-                <Album />
-            ): (
-                <>
-                </>
-            )}
-            
+            {login ? (<Album />) : (<></>)}
         </Grid>
     )
 }
@@ -125,7 +116,7 @@ const Container1 = () => {
                         </Button>
                         <p style={{ color: 'white', fontSize: '100%', fontFamily: 'sans-serif' }}>Make your Photo better</p>
                     </Grid>
-                    <Grid container className={classes.box2} direction="column" alignItems='center' justify="center" >
+                    <Grid container className={classes.box2} direction="column" alignItems='center' justify="center" style={{marginTop: '130px'}}>
                         <Grid item className={classes.box2_1} >
                             <img src={bgimg} alt="Anh" className={classes.imgBG}></img>
                         </Grid>
@@ -170,123 +161,40 @@ const Album = () => {
     const isMatch_md = useMediaQuery(theme.breakpoints.down('md'));
     const isMatch_sm = useMediaQuery(theme.breakpoints.down('sm'));
     const isMatch_xs = useMediaQuery(theme.breakpoints.down('xs'));
+
+    const [cols, setCols] = useState('')
+    const [height, setHeight] = useState('')
+
+    const setAlbum = () => {
+        return (
+            !isMatch_md ? (setCols(5), setHeight(240)) :
+                (!isMatch_sm ? (setCols(4), setHeight(210)) :
+                    (!isMatch_xs ? (setCols(3), setHeight(180)) :
+                        (setCols(2), setHeight(150))))
+        )
+    }
+
+    useEffect(() => {setAlbum()});
     return (
-        <>
-            {!isMatch_md ? (
-                <Grid container justify='center' className={classes.album} >
-                    <div className={classes.main_album}>
-                        <IMG5/>
-                    </div>
-                </Grid >
-            ) : ( !isMatch_sm ? (
-                <Grid container justify='center' className={classes.album}>
-                    <div className={classes.main_album}>
-                        <IMG4 />
-                    </div>
-                </Grid>
-            ): ( !isMatch_xs ?(
-                <Grid container justify='center' className={classes.album}>
-                    <div className={classes.main_album}>
-                        <IMG3 />
-                    </div>
-                </Grid>
-            ): (
-                <Grid container justify='center' className={classes.album}>
-                    <div className={classes.main_album}>
-                        <IMG2 />
-                    </div>
-                </Grid>
-            ))
-            
-                
-            )}
-        </>
+        <Grid container justify='center' className={classes.album} >
+            <div className={classes.main_album}>
+                <GridList cellHeight={height} cols={cols} >
+                    {dataImages.map((data) => (
+                        <GridListTile key={data.id}>
+                            <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
+                            <GridListTileBar
+                                title={data.title}
+                                subtitle={data.description}
+                                style={{ textAlign: 'start' }}
+                                acctionIcon={
+                                    <IconButton>
+                                        <InfoIcon style={{ color: 'white' }} />
+                                    </IconButton>
+                                } />
+                        </GridListTile>
+                    ))}
+                </GridList>
+            </div>
+        </Grid >
     )
 }
-
-const IMG5 = () => {
-    return (
-        <GridList cellHeight={240} cols={'5'} >
-            {dataImages.map((data) => (
-                <GridListTile key={data.id}>
-                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
-                    <GridListTileBar
-                        title={data.title}
-                        subtitle={data.description}
-                        style={{ textAlign: 'start' }}
-                        acctionIcon={
-                            <IconButton>
-                                <InfoIcon style={{ color: 'white' }} />
-                            </IconButton>
-                        } />
-                </GridListTile>
-            ))}
-        </GridList>
-    )
-}
-
-const IMG4 = () => {
-    return (
-        <GridList cellHeight={210} cols={'4'} >
-            {dataImages.map((data) => (
-                <GridListTile key={data.id}>
-                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
-                    <GridListTileBar
-                        title={data.title}
-                        subtitle={data.description}
-                        style={{ textAlign: 'start' }}
-                        acctionIcon={
-                            <IconButton>
-                                <InfoIcon style={{ color: 'white' }} />
-                            </IconButton>
-                        } />
-                </GridListTile>
-            ))}
-        </GridList>
-    )
-}
-
-const IMG3 = () => {
-    return (
-        <GridList cellHeight={180} cols={'3'} >
-            {dataImages.map((data) => (
-                <GridListTile key={data.id}>
-                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
-                    <GridListTileBar
-                        title={data.title}
-                        subtitle={data.description}
-                        style={{ textAlign: 'start' }}
-                        acctionIcon={
-                            <IconButton>
-                                <InfoIcon style={{ color: 'white' }} />
-                            </IconButton>
-                        } />
-                </GridListTile>
-            ))}
-        </GridList>
-    )
-}
-
-const IMG2 = () => {
-    return (
-        <GridList cellHeight={150} cols={'2'} >
-            {dataImages.map((data) => (
-                <GridListTile key={data.id}>
-                    <img style={{ backgroundSize: 'cover' }} src={data.image} alt={data.title} />
-                    <GridListTileBar
-                        title={data.title}
-                        subtitle={data.description}
-                        style={{ textAlign: 'start' }}
-                        acctionIcon={
-                            <IconButton>
-                                <InfoIcon style={{ color: 'white' }} />
-                            </IconButton>
-                        } />
-                </GridListTile>
-            ))}
-        </GridList>
-    )
-}
-
-
-
