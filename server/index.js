@@ -18,7 +18,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/auth", require("./routes/authRoute"));
-app.use("/user", require("./routes/userRoute"))
 
 app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message })
