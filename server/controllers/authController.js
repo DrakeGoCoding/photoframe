@@ -1,7 +1,8 @@
 const {
     signup,
     requestPasswordReset,
-    resetPassword
+    resetPassword,
+    checkCode,
 } = require('../services/authService')
 
 const signupController = async (req, res, next) => {
@@ -25,8 +26,8 @@ const requestPasswordResetController = async (req, res, next) => {
 const resetPasswordController = async (req, res, next) => {
     try {
         const resetPasswordService = await resetPassword(
-            req.body.userId,
-            req.body.token,
+            req.body.email,
+            req.body.code,
             req.body.password)
         return res.json(resetPasswordService)
     } catch (error) {
@@ -34,8 +35,18 @@ const resetPasswordController = async (req, res, next) => {
     }
 }
 
+const checkCodeController = async (req, res, next) => {
+    try {
+        const checkCodeService = await checkCode(req.body.code)
+        return res.json(checkCodeService)
+    } catch (error) {
+        res.status(404).send({ error: error.message })
+    }
+}
+
 module.exports = {
     signupController,
     requestPasswordResetController,
-    resetPasswordController
+    resetPasswordController,
+    checkCodeController,
 }

@@ -1,43 +1,59 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@material-ui/core'
+import {
+    Box, Button,
+    Container, CssBaseline,
+    Grid,
+    IconButton, InputAdornment,
+    Link,
+    TextField, Typography
+} from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from './Alert'
+import Alert from './assets/Alert'
+import Loader from './assets/Loader'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
 
 import BackgroundImage from './assets/bg.jpg'
 
 import { checkPassword } from './utils'
+import { requestPasswordReset, resetPassword, checkCode } from './Axios';
 
 export default function ResetPassword() {
     const classes = useStyles()
 
-    const [emailChecked, setEmailChecked] = useState(false)
-    const [codeChecked, setCodeChecked] = useState(false)
+    const [email, setEmail] = useState('')
+    const [code, setCode] = useState('')
 
     const backtoEmail = e => {
         e.preventDefault();
-        setEmailChecked(false);
+        setEmail('');
     }
     const backtoLogin = e => {
         e.preventDefault();
         console.log("Back to log in");
     }
 
-    const Email = () => {
+    const Email = (props) => {
         const [email, setEmail] = useState('')
         const [alert, setAlert] = useState('')
+        const [loading, setLoading] = useState(false)
 
         const changeEmail = e => setEmail(e.target.value)
 
-        const submitEmail = e => {
+        const submitEmail = async (e) => {
             e.preventDefault()
             try {
-                setEmailChecked(true);
-                console.log({ email });
+                setLoading(true)
+                setAlert('')
+                await requestPasswordReset({ email })
+                setTimeout(() => {
+                    props.setEmail(email)
+                    setLoading(false)
+                }, 1000)
             } catch (error) {
                 setAlert(error.response.data.error);
+                setLoading(false)
             }
         }
         return (
@@ -57,29 +73,40 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{"Continue"}
+                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
                 </Button>
                 <Link href="" variant="body2" align="center" onClick={backtoLogin}>{"Return to log in"}</Link>
             </form>
         )
     }
 
-    const Code = () => {
+    const Code = (props) => {
         const CODE_LENGTH = 6
-
         const [code, setCode] = useState('')
         const [alert, setAlert] = useState('')
+        const [loading, setLoading] = useState(false)
 
         const changeCode = value => setCode(value)
 
-        const submitCode = e => {
+        const submitCode = async (e) => {
             e.preventDefault()
             try {
-                setCodeChecked(true)
-                console.log({ code });
+                setLoading(true)
+                setAlert('')
+                await checkCode({ code })
+                setTimeout(() => {
+                    props.setCode(code)
+                    setLoading(false)
+                }, 1000)
             } catch (error) {
                 setAlert(error.response.data.error);
+                setLoading(false)
             }
+        }
+
+        const resendCode = async (e) => {
+            e.preventDefault()
+            await requestPasswordReset({ email })
         }
 
         const CountDownOTP = (props) => {
@@ -88,7 +115,7 @@ export default function ResetPassword() {
                     ? `Resend code in ${props.total / 1000 - 1}s`
                     : <>
                         Didn't get the code?&nbsp;
-                    <Link href="#" variant="body2">Resend code</Link>
+                    <Link href="#" variant="body2" onClick={resendCode}>Resend code</Link>
                     </>}
             </Typography>
         }
@@ -109,7 +136,7 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{"Continue"}
+                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
                 </Button>
                 <Grid container>
                     <Grid item xs>
@@ -127,9 +154,11 @@ export default function ResetPassword() {
         const [password, setPassword] = useState('')
         const [confirmPassword, setConfirmPassword] = useState('')
         const [passwordShown, setPasswordShown] = useState(false)
+        const [loading, setLoading] = useState(false)
 
         const [passwordAlert, setPasswordAlert] = useState('')
         const [confirmPasswordAlert, setConfirmPasswordAlert] = useState('')
+        const [alert, setAlert] = useState('')
 
         const changePassword = e => {
             const input = e.target.value
@@ -145,15 +174,26 @@ export default function ResetPassword() {
                 ? setConfirmPasswordAlert('Password mismatch.')
                 : setConfirmPasswordAlert('')
         }
-        const submitPassword = e => {
-            e.preventDefault()
-            console.log({ password });
-            console.log('Back to log in');
-        }
 
         const togglePasswordVisibility = e => {
             e.preventDefault()
             setPasswordShown(!passwordShown)
+        }
+
+        const submitPassword = async (e) => {
+            e.preventDefault()
+            try {
+                setLoading(true)
+                setAlert('')
+                await resetPassword({ email, code, password })
+                setTimeout(() => {
+                    console.log('Back to login');
+                    setLoading(false)
+                }, 1000)
+            } catch (error) {
+                setAlert(error.response.data.error);
+                setLoading(false)
+            }
         }
 
         return (
@@ -178,7 +218,7 @@ export default function ResetPassword() {
                                     {passwordShown ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
-                    }}/>
+                    }} />
                 <TextField
                     className={classes.textfield}
                     variant="outlined" margin="normal" fullWidth
@@ -186,13 +226,14 @@ export default function ResetPassword() {
                     type={passwordShown ? "text" : "password"} name="confirmPassword" value={confirmPassword}
                     onChange={changeConfirmPassword} required
                     error={confirmPasswordAlert.length > 0}
-                    helperText={confirmPasswordAlert}/>
+                    helperText={confirmPasswordAlert} />
+                {alert && <Alert message={alert} />}
                 <Button
                     className={classes.submit}
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="primary">{"Set password"}
+                    color="primary">{loading ? <Loader /> : 'Set password'}
                 </Button>
             </form>
         )
@@ -203,10 +244,10 @@ export default function ResetPassword() {
             <Container component="main" maxWidth="sm" className={classes.container}>
                 <CssBaseline />
                 <div className={classes.wrapper}>
-                    {!emailChecked
-                        ? <Email />
-                        : !codeChecked
-                            ? <Code />
+                    {!email
+                        ? <Email setEmail={setEmail} />
+                        : !code
+                            ? <Code setCode={setCode} />
                             : <Reset />
                     }
                 </div>
