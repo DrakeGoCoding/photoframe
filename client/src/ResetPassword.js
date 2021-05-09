@@ -296,7 +296,7 @@ const useStyles = makeStyles(theme => ({
     },
     form: {
         width: '100%',
-        padding: '2rem',
+        padding: '1.5rem',
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
@@ -330,15 +330,6 @@ const useStyles = makeStyles(theme => ({
         fontSize: '1.125rem',
         height: '3rem',
     },
-    separator: {
-        display: 'block',
-        height: '1px',
-        border: '0',
-        borderTop: '1px solid hsl(0, 0%, 90%)',
-        margin: '1em 0',
-        padding: '0',
-        flex: '1 0',
-    },
     '@media (max-width: 600px)': {
         container: {
             padding: '0',
@@ -348,15 +339,8 @@ const useStyles = makeStyles(theme => ({
         },
         form: {
             height: '100%',
-            padding: '1.5rem',
+            padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
-        },
-        textfield: {
-            margin: '0.5rem 0'
-        },
-        separator: {
-            marginTop: '2rem',
-            marginBottom: '2rem',
         },
         footer: {
             display: 'none',
