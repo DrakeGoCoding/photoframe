@@ -176,7 +176,8 @@ const useStyles = makeStyles(theme => ({
             url(${BackgroundImage})
         `,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        overflow: 'hidden'
     },
     container: {
         width: '100vw',
