@@ -58,28 +58,17 @@ export default function LogIn() {
                         <Typography paragraph className={classes.title} variant="h5">{"Login to your account"}</Typography>
                         <TextField
                             className={classes.textfield}
-                            variant="outlined"
-                            margin="normal"
-                            type="email"
-                            required
-                            fullWidth
+                            variant="outlined" margin="normal" fullWidth
                             label="Email address"
-                            name="email"
-                            value={email}
+                            type="email" name="email" value={email}
                             onChange={changeEmail}
-                            autoComplete="email"
-                            autoFocus />
+                            autoComplete="email" autoFocus required />
                         <TextField
                             className={classes.textfield}
-                            variant="outlined"
-                            margin="normal"
+                            variant="outlined" margin="normal" fullWidth
+                            label="Password" name="password" value={password}
                             type={passwordShown ? "text" : "password"}
-                            required
-                            fullWidth
-                            label="Password"
-                            name="password"
-                            value={password}
-                            onChange={changePassword}
+                            onChange={changePassword} required
                             autoComplete="current-password"
                             InputProps={{
                                 endAdornment:
@@ -93,11 +82,8 @@ export default function LogIn() {
                             }} />
                         {alertMessage && <Alert message={alertMessage} />}
                         <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}>
+                            className={classes.submit} type="submit"
+                            variant="contained" color="primary" fullWidth>
                             {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
@@ -113,7 +99,7 @@ export default function LogIn() {
                                             onClick={renderProps.onClick}
                                             fullWidth
                                             variant="contained">
-                                            <Icon className={classes.googleIcon}></Icon>
+                                            <Icon className={classes.googleIcon} />
                                             &nbsp;Continue with Google
                                         </Button>
                                     )}
@@ -132,7 +118,7 @@ export default function LogIn() {
                                             fullWidth
                                             variant="contained"
                                             onClick={renderProps.onClick}>
-                                            <Icon className={classes.facebookIcon}></Icon>
+                                            <Icon className={classes.facebookIcon} />
                                             &nbsp;Continue with Facebook
                                         </Button>
                                     )}
