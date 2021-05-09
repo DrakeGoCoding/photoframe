@@ -47,10 +47,8 @@ export default function ResetPassword() {
                 setLoading(true)
                 setAlert('')
                 await requestPasswordReset({ email })
-                setTimeout(() => {
-                    props.setEmail(email)
-                    setLoading(false)
-                }, 1000)
+                props.setEmail(email)
+                setLoading(false)
             } catch (error) {
                 setAlert(error.response.data.error);
                 setLoading(false)
@@ -82,9 +80,11 @@ export default function ResetPassword() {
 
     const Code = (props) => {
         const CODE_LENGTH = 6
+        const RESETCODE_TIME = 60000
         const [code, setCode] = useState('')
         const [alert, setAlert] = useState('')
         const [loading, setLoading] = useState(false)
+        const [currentTime, setCurrentTime] = useState(Date.now)
 
         const changeCode = value => setCode(value)
 
@@ -94,28 +94,27 @@ export default function ResetPassword() {
                 setLoading(true)
                 setAlert('')
                 await checkCode({ code })
-                setTimeout(() => {
-                    props.setCode(code)
-                    setLoading(false)
-                }, 1000)
+                props.setCode(code)
+                setLoading(false)
             } catch (error) {
                 setAlert(error.response.data.error);
                 setLoading(false)
             }
         }
 
-        const resendCode = async (e) => {
-            e.preventDefault()
-            await requestPasswordReset({ email })
-        }
-
         const CountDownOTP = (props) => {
+            const resendCode = async (e) => {
+                e.preventDefault()
+                setCurrentTime(Date.now)
+                await requestPasswordReset({ email })
+            }
+
             return <Typography variant="subtitle2">
                 {!props.completed
                     ? `Resend code in ${props.total / 1000 - 1}s`
                     : <>
                         Didn't get the code?&nbsp;
-                    <Link href="#" variant="body2" onClick={resendCode}>Resend code</Link>
+                        <Link href="#" variant="body2" onClick={resendCode}>Resend code</Link>
                     </>}
             </Typography>
         }
@@ -143,7 +142,10 @@ export default function ResetPassword() {
                         <Link href="" variant="body2" onClick={backtoEmail}>{'Back'}</Link>
                     </Grid>
                     <Grid item>
-                        <Countdown date={Date.now() + 60000} renderer={CountDownOTP} />
+                        <Countdown
+                            date={currentTime + RESETCODE_TIME}
+                            key={currentTime}
+                            renderer={CountDownOTP} />
                     </Grid>
                 </Grid>
             </form>
@@ -186,10 +188,8 @@ export default function ResetPassword() {
                 setLoading(true)
                 setAlert('')
                 await resetPassword({ email, code, password })
-                setTimeout(() => {
-                    console.log('Back to login');
-                    setLoading(false)
-                }, 1000)
+                console.log('Back to login');
+                setLoading(false)
             } catch (error) {
                 setAlert(error.response.data.error);
                 setLoading(false)
@@ -328,6 +328,7 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(2, 0, 2, 0),
         fontSize: '1.125rem',
+        height: '3rem',
     },
     separator: {
         display: 'block',

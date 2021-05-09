@@ -203,6 +203,7 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(2, 0, 0, 0),
         fontSize: '1.125rem',
+        height: '3rem',
     },
     methodSeparator: {
         display: 'flex',

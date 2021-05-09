@@ -66,10 +66,8 @@ export default function SignUp() {
             setLoading(true)
             setAlertMessage('')
             const res = await signup(account)
-            setTimeout(() => {
-                console.log(res);
-                setLoading(false);
-            }, 1000)
+            console.log(res);
+            setLoading(false);
         } catch (error) {
             setAlertMessage(error.response.data.error);
             setLoading(false);
@@ -280,6 +278,7 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(2, 0, 0, 0),
         fontSize: '1.125rem',
+        height: '3rem',
     },
     methodSeparator: {
         display: 'flex',

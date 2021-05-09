@@ -12,7 +12,7 @@
     width        : 2rem;
     height       : 2rem;
     margin       : auto;
-    border       : 0.4rem solid #fff;
+    border       : 0.3rem solid #fff;
     border-radius: 50%;
     animation    : spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color : #fff transparent transparent transparent;
