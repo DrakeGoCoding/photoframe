@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
     Box, Button,
+    CircularProgress,
     Container, CssBaseline,
     Grid,
     IconButton, InputAdornment,
@@ -10,7 +11,6 @@ import {
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './assets/Alert'
-import Loader from './assets/Loader'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
 
@@ -71,7 +71,8 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
+                    className={classes.submit}>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
                 <Link href="" variant="body2" align="center" onClick={backtoLogin}>{"Return to log in"}</Link>
             </form>
@@ -135,7 +136,8 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
+                    className={classes.submit}>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
                 <Grid container>
                     <Grid item xs>
@@ -233,7 +235,8 @@ export default function ResetPassword() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="primary">{loading ? <Loader /> : 'Set password'}
+                    color="primary">
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Set password'}
                 </Button>
             </form>
         )

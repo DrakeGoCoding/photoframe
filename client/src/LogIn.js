@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './assets/Alert'
 
@@ -18,6 +18,7 @@ export default function LogIn() {
     const [password, setPassword] = useState('')
     const [alertMessage, setAlertMessage] = useState('');
     const [passwordShown, setPasswordShown] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const changeEmail = e => setEmail(e.target.value)
     const changePassword = e => setPassword(e.target.value)
@@ -25,10 +26,13 @@ export default function LogIn() {
     const handleSubmit = e => {
         e.preventDefault()
         try {
+            setLoading(true)
+            setAlertMessage('')
             const account = { email, password }
             console.log(account);
         } catch (error) {
             setAlertMessage(error.response.data.error)
+            setLoading(false);
         }
     }
 
@@ -69,7 +73,7 @@ export default function LogIn() {
                             className={classes.textfield}
                             variant="outlined"
                             margin="normal"
-                            type={passwordShown ? "text": "password"}
+                            type={passwordShown ? "text" : "password"}
                             required
                             fullWidth
                             label="Password"
@@ -93,7 +97,8 @@ export default function LogIn() {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.submit}>{"Log in"}
+                            className={classes.submit}>
+                            {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
                             <hr className={classes.separator} />OR<hr className={classes.separator} />
