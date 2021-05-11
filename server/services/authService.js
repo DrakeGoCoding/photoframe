@@ -12,15 +12,27 @@ const signup = async (data) => {
         throw new Error(`Email ${data.email} has already been registered.`)
 
     user = new User(data)
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
-    await user.save()
-
-    return (data = {
-        userId: user._id,
-        email: user.email,
-        name: user.name,
-        token: token
+    user.save(error => {
+        if (error) throw error
+        console.log('New user ' + user);
     })
+
+    return true
+}
+
+const signin = async (data) => {
+    const { email, password } = data
+    const user = await User.findOne({ email })
+    if (!user)
+        throw new Error(`Incorrect email or password.`)
+
+    const validPassword = await bcrypt.compare(password, user.password)
+    if (!validPassword)
+        throw new Error(`Incorrect email or password.`)
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+
+    return token
 }
 
 const requestPasswordReset = async (email) => {
@@ -58,13 +70,6 @@ const requestPasswordReset = async (email) => {
     return true
 }
 
-/**
- * 
- * @param {String} email 
- * @param {String} code 
- * @param {String} password 
- * @returns 
- */
 const resetPassword = async (email, code, password) => {
     const user = await User.findOne({ email })
     if (!user)
@@ -107,6 +112,7 @@ const checkCode = async (code) => {
 }
 
 module.exports = {
+    signin,
     signup,
     requestPasswordReset,
     resetPassword,

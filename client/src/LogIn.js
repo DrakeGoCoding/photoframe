@@ -10,6 +10,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
+import { signin } from './Axios';
 
 export default function LogIn() {
     const classes = useStyles()
@@ -23,13 +24,15 @@ export default function LogIn() {
     const changeEmail = e => setEmail(e.target.value)
     const changePassword = e => setPassword(e.target.value)
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             setLoading(true)
             setAlertMessage('')
             const account = { email, password }
-            console.log(account);
+            const token = await signin(account)
+            console.log(token)
+            setLoading(false)
         } catch (error) {
             setAlertMessage(error.response.data.error)
             setLoading(false);

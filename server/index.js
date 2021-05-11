@@ -1,5 +1,5 @@
 const dotenv = require('dotenv')
-const envConfig = dotenv.config()
+dotenv.config()
 
 const express = require('express')
 const app = express()
@@ -17,7 +17,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use("/auth", require("./routes/authRoute"));
+app.use("/auth", require("./routes/authRoute"))
 
 app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message })

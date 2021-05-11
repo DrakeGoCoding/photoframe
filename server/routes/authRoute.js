@@ -1,4 +1,5 @@
 const {
+    signinController,
     signupController,
     requestPasswordResetController,
     resetPasswordController,
@@ -7,6 +8,7 @@ const {
 
 const router = require('express').Router()
 
+router.post('/signin', signinController)
 router.post('/signup', signupController)
 router.post('/requestResetPassword', requestPasswordResetController)
 router.post('/resetPassword', resetPasswordController)
