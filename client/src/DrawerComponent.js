@@ -19,8 +19,6 @@ import ContactsIcon from '@material-ui/icons/Contacts';
 import HelpIcon from '@material-ui/icons/Help';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 
-
-
 const useStyles = makeStyles((theme) => ({
     menuIconContainer: {
         marginLeft: 'auto'

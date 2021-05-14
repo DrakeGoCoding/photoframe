@@ -1,19 +1,31 @@
 import React, { useState } from 'react'
-import './css/Nav.css'
 import DrawerComponent from './DrawerComponent'
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
+import {
+    makeStyles,
+    useTheme,
+    withStyles
+} from '@material-ui/core/styles';
 
-import { useMediaQuery, Button, Toolbar, AppBar, ListItemText, Menu, MenuItem } from '@material-ui/core';
+import {
+    useMediaQuery,
+    Button,
+    Toolbar,
+    AppBar,
+    ListItemText,
+    Menu,
+    MenuItem,
+    useScrollTrigger,
+    Slide
+} from '@material-ui/core';
+
 import logo from './assets/logo.png'
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const StyledMenu = withStyles({
     paper: {
         border: '1px solid #d3d4d5',
     },
 })((props) => (
-    <Menu 
+    <Menu
         getContentAnchorEl={null}
         anchorOrigin={{
             vertical: 'bottom',
@@ -26,49 +38,78 @@ const StyledMenu = withStyles({
         {...props}
     />
 ));
-
 const StyledMenuItem = withStyles((theme) => ({}))(MenuItem);
 
+interface Props {
+    children: React.ReactElement;
+}
+function HideOnSrcoll({ children }: Props) {
+    const trigger = useScrollTrigger();
+    return (
+        <Slide appear={false} direction={"down"} in={!trigger}>
+            {children}
+        </Slide>
+    )
+}
+
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1
-    },
     bar: {
-        background: '#ffffff',
-        left: '0',
-        right: '0',
+        background: '#f3f3f3',
         width: '100%',
         height: 'auto',
-        padding: '10px 0 1% 0'
+        padding: '10px 0px 10px 0px',
+        [theme.breakpoints.down('xs')]: {
+            padding: '0',
+        },
     },
-
+    toolbar: {
+        width: '85%',
+        margin: 'auto',
+        top: '0',
+    },
     btnAccount: {
-        color: '#079de0',
+        color: '#039be5',
+        background: 'rgba(255,255,255,0)',
         position: 'absolute',
-        right: '2rem',
+        right: '0',
         width: 'auto',
+        borderRadius: '10px',
         textTransform: 'uppercase',
         '&:hover': {
             backgroundColor: '#12a0d0',
             color: '#fefefe'
         },
-        [theme.breakpoints.down('sm')]:{
+        [theme.breakpoints.down('md')]: {
             fontSize: 'small'
         }
     },
-
     btnNUT: {
-        marginLeft: '1em',
         textTransform: 'uppercase',
-        [theme.breakpoints.down('sm')]:{
+        color: '#039be5',
+        marginRight: '4em',
+        fontWeight: '600',
+        [theme.breakpoints.down('sm')]: {
             fontSize: 'small'
         }
-     },
-
-     nested: {
+    },
+    nested: {
         paddingLeft: '10px'
-     }
-
+    },
+    logo: {
+        height: 'auto',
+        width: '10%',
+        margin: '0em 5em 0em 0em',
+        [theme.breakpoints.down('sm')]: {
+            height: 'auto',
+            width: '13%',
+            margin: '0em 0em 0em 0em',
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: 'auto',
+            width: '17%',
+            margin: '0em 0em 0em 0em',
+        },
+    }
 }));
 
 export default function Nav() {
@@ -77,60 +118,34 @@ export default function Nav() {
 
     const classes = useStyles();
     const theme = useTheme();
-    const isMatch = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const [open, setOpen] = useState(false);
 
-    const [anchorEl, setAnchorEl] = useState(null);
     const [anchorElAC, setAnchorElAC] = useState(null);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setOpen(false);
-    };
 
     const handleClickAccount = (event) => {
         setAnchorElAC(event.currentTarget);
     };
-
     const handleCloseAccount = () => {
         setAnchorElAC(null);
     };
 
-
     return (
-        <div className={classes.root}>
+        <HideOnSrcoll>
             <AppBar className={classes.bar} >
-                <Toolbar >
-                    <img alt="Logo" src={logo} style={{ height: 'auto', width: '11%', marginRight: '3em' }} />
+                <Toolbar className={classes.toolbar}>
+                    <img alt="Logo" src={logo} className={classes.logo} />
                     {isMatch ? (<><DrawerComponent /></>)
                         : (
                             <div>
-                                <Button className={classes.btnNUT} size="large" color="primary" onClick={handleClick} >more
-                                {open ? <ExpandLess /> : <ExpandMore />}
-                                </Button>
-                                <StyledMenu anchorEl={anchorEl} open={Boolean(anchorEl)} onClick={handleClose} onClose={handleClose}>
-                                    <StyledMenuItem>
-                                        <ListItemText primary="Contact" />
-                                    </StyledMenuItem>
-                                    <StyledMenuItem>
-                                        <ListItemText primary="Guide" />
-                                    </StyledMenuItem>
-                                    <StyledMenuItem>
-                                        <ListItemText primary="Tips" />
-                                    </StyledMenuItem>
-                                </StyledMenu>
-                                <Button className={classes.btnNUT} size="large" color="primary">about</Button>
+                                <Button className={classes.btnNUT} size="nomal">album</Button>
+                                <Button className={classes.btnNUT} size="nomal" color="primary">contact</Button>
+                                <Button className={classes.btnNUT} size="nomal" color="primary">about</Button>
                                 {login ? (
                                     <>
-                                        <Button className={classes.btnAccount} variant="outlined" onClick={handleClickAccount} >account
-                                        </Button>
-                                        <StyledMenu  anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
+                                        <Button className={classes.btnAccount} variant="outlined" onClick={handleClickAccount}>account</Button>
+                                        <StyledMenu anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
                                             <StyledMenuItem>
                                                 <ListItemText className={classes.btnLeft} primary="Profile" />
                                             </StyledMenuItem>
@@ -140,12 +155,12 @@ export default function Nav() {
                                         </StyledMenu>
                                     </>)
                                     : (
-                                        <Button variant="outlined" color="primary" className={classes.btnAccount}>LOGIN</Button>
+                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount}>LOGIN</Button>
                                     )}
                             </div>
                         )}
                 </Toolbar>
             </AppBar>
-        </div>
+        </HideOnSrcoll>
     )
 }
