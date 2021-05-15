@@ -1,35 +1,45 @@
 const {
+    signin,
     signup,
     requestPasswordReset,
     resetPassword,
     checkCode,
 } = require('../services/authService')
 
+const signinController = async (req, res, next) => {
+    try {
+        const token = await signin(req.body)
+        res.json({ token })
+    } catch (error) {
+        res.status(400).send({ error: error.message })
+    }
+}
+
 const signupController = async (req, res, next) => {
     try {
-        const signUpService = await signup(req.body)
-        return res.json(signUpService)
+        const signupStatus = await signup(req.body)
+        res.json({ signupStatus })
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        res.status(400).send({ error: error.message })
     }
 }
 
 const requestPasswordResetController = async (req, res, next) => {
     try {
-        const requestPasswordResetService = await requestPasswordReset(req.body.email)
-        return res.json(requestPasswordResetService)
+        const requestStatus = await requestPasswordReset(req.body.email)
+        res.json({ requestStatus })
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        res.status(400).send({ error: error.message })
     }
 }
 
 const resetPasswordController = async (req, res, next) => {
     try {
-        const resetPasswordService = await resetPassword(
+        const resetStatus = await resetPassword(
             req.body.email,
             req.body.code,
             req.body.password)
-        return res.json(resetPasswordService)
+        res.json({ resetStatus })
     } catch (error) {
         res.status(401).send({ error: error.message })
     }
@@ -37,14 +47,15 @@ const resetPasswordController = async (req, res, next) => {
 
 const checkCodeController = async (req, res, next) => {
     try {
-        const checkCodeService = await checkCode(req.body.code)
-        return res.json(checkCodeService)
+        const checkStatus = await checkCode(req.body.code)
+        res.json({ checkStatus })
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        res.status(401).send({ error: error.message })
     }
 }
 
 module.exports = {
+    signinController,
     signupController,
     requestPasswordResetController,
     resetPasswordController,

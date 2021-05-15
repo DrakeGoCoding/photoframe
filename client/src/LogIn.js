@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from './Alert'
+import Alert from './assets/Alert'
 
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -10,6 +10,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
+import { signin } from './Axios';
 
 export default function LogIn() {
     const classes = useStyles()
@@ -18,17 +19,23 @@ export default function LogIn() {
     const [password, setPassword] = useState('')
     const [alertMessage, setAlertMessage] = useState('');
     const [passwordShown, setPasswordShown] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const changeEmail = e => setEmail(e.target.value)
     const changePassword = e => setPassword(e.target.value)
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            setLoading(true)
+            setAlertMessage('')
             const account = { email, password }
-            console.log(account);
+            const token = await signin(account)
+            console.log(token)
+            setLoading(false)
         } catch (error) {
             setAlertMessage(error.response.data.error)
+            setLoading(false);
         }
     }
 
@@ -54,28 +61,17 @@ export default function LogIn() {
                         <Typography paragraph className={classes.title} variant="h5">{"Login to your account"}</Typography>
                         <TextField
                             className={classes.textfield}
-                            variant="outlined"
-                            margin="normal"
-                            type="email"
-                            required
-                            fullWidth
+                            variant="outlined" margin="normal" fullWidth
                             label="Email address"
-                            name="email"
-                            value={email}
+                            type="email" name="email" value={email}
                             onChange={changeEmail}
-                            autoComplete="email"
-                            autoFocus />
+                            autoComplete="email" autoFocus required />
                         <TextField
                             className={classes.textfield}
-                            variant="outlined"
-                            margin="normal"
-                            type={passwordShown ? "text": "password"}
-                            required
-                            fullWidth
-                            label="Password"
-                            name="password"
-                            value={password}
-                            onChange={changePassword}
+                            variant="outlined" margin="normal" fullWidth
+                            label="Password" name="password" value={password}
+                            type={passwordShown ? "text" : "password"}
+                            onChange={changePassword} required
                             autoComplete="current-password"
                             InputProps={{
                                 endAdornment:
@@ -89,11 +85,9 @@ export default function LogIn() {
                             }} />
                         {alertMessage && <Alert message={alertMessage} />}
                         <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}>{"Log in"}
+                            className={classes.submit} type="submit"
+                            variant="contained" color="primary" fullWidth>
+                            {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
                             <hr className={classes.separator} />OR<hr className={classes.separator} />
@@ -108,7 +102,7 @@ export default function LogIn() {
                                             onClick={renderProps.onClick}
                                             fullWidth
                                             variant="contained">
-                                            <Icon className={classes.googleIcon}></Icon>
+                                            <Icon className={classes.googleIcon} />
                                             &nbsp;Continue with Google
                                         </Button>
                                     )}
@@ -127,7 +121,7 @@ export default function LogIn() {
                                             fullWidth
                                             variant="contained"
                                             onClick={renderProps.onClick}>
-                                            <Icon className={classes.facebookIcon}></Icon>
+                                            <Icon className={classes.facebookIcon} />
                                             &nbsp;Continue with Facebook
                                         </Button>
                                     )}
@@ -176,7 +170,8 @@ const useStyles = makeStyles(theme => ({
             url(${BackgroundImage})
         `,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        overflow: 'hidden'
     },
     container: {
         width: '100vw',
@@ -190,15 +185,18 @@ const useStyles = makeStyles(theme => ({
     },
     form: {
         width: '100%',
-        padding: '2rem',
+        padding: '1.5rem',
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
-        minWidth: '320px'
+        minWidth: '320px',
     },
     title: {
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    textfield: {
+        margin: '0.5rem 0',
     },
     submit: {
         margin: theme.spacing(2, 0, 0, 0),
@@ -211,8 +209,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         fontSize: '0.75rem',
         color: 'rgba(47,64,80,.25);',
-        marginTop: '1rem',
-        marginBottom: '1rem',
+        margin: '0.5rem 0',
     },
     methodBtn: {
         color: '#0e1318',
@@ -237,7 +234,7 @@ const useStyles = makeStyles(theme => ({
         height: '1px',
         border: '0',
         borderTop: '1px solid hsl(0, 0%, 90%)',
-        margin: '1em 0',
+        margin: '1rem 0',
         padding: '0',
         flex: '1 0',
     },
@@ -249,19 +246,18 @@ const useStyles = makeStyles(theme => ({
             margin: 'auto 0 0 0',
         },
         form: {
-            height: '100%',
-            padding: '1.5rem',
+            padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
         },
         textfield: {
-            margin: '0.5rem 0'
+            margin: '0.3rem 0'
         },
         methodSeparator: {
             margin: '0'
         },
         separator: {
-            marginTop: '2rem',
-            marginBottom: '2rem',
+            marginTop: '1rem',
+            marginBottom: '1rem',
         },
         footer: {
             display: 'none',

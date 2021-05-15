@@ -5,6 +5,16 @@ const instance = axios.create({
     timeout: 20000
 })
 
+instance.interceptors.request.use(req => {
+    const token = localStorage.getItem('accessToken')
+    req.headers['Authorization'] = 'Bearer ' + token
+    return req
+})
+
+export const signin = (body) => {
+    return instance.post('/auth/signin', body)
+}
+
 export const signup = (body) => {
     return instance.post('/auth/signup', body)
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
     Box, Button,
+    CircularProgress,
     Container, CssBaseline,
     Grid,
     IconButton, InputAdornment,
@@ -10,7 +11,6 @@ import {
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './assets/Alert'
-import Loader from './assets/Loader'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
 
@@ -71,7 +71,8 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
+                    className={classes.submit}>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
                 <Link href="" variant="body2" align="center" onClick={backtoLogin}>{"Return to log in"}</Link>
             </form>
@@ -135,7 +136,8 @@ export default function ResetPassword() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>{loading ? <Loader /> : 'Continue'}
+                    className={classes.submit}>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
                 <Grid container>
                     <Grid item xs>
@@ -233,7 +235,8 @@ export default function ResetPassword() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="primary">{loading ? <Loader /> : 'Set password'}
+                    color="primary">
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Set password'}
                 </Button>
             </form>
         )
@@ -296,7 +299,7 @@ const useStyles = makeStyles(theme => ({
     },
     form: {
         width: '100%',
-        padding: '2rem',
+        padding: '1.5rem',
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
@@ -330,15 +333,6 @@ const useStyles = makeStyles(theme => ({
         fontSize: '1.125rem',
         height: '3rem',
     },
-    separator: {
-        display: 'block',
-        height: '1px',
-        border: '0',
-        borderTop: '1px solid hsl(0, 0%, 90%)',
-        margin: '1em 0',
-        padding: '0',
-        flex: '1 0',
-    },
     '@media (max-width: 600px)': {
         container: {
             padding: '0',
@@ -348,15 +342,8 @@ const useStyles = makeStyles(theme => ({
         },
         form: {
             height: '100%',
-            padding: '1.5rem',
+            padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
-        },
-        textfield: {
-            margin: '0.5rem 0'
-        },
-        separator: {
-            marginTop: '2rem',
-            marginBottom: '2rem',
         },
         footer: {
             display: 'none',

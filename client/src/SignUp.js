@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './assets/Alert'
-import Loader from './assets/Loader'
 
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -21,7 +20,6 @@ export default function SignUp() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordShown, setPasswordShown] = useState(false)
-
     const [loading, setLoading] = useState(false)
 
     const [alertMessage, setAlertMessage] = useState('')
@@ -194,12 +192,12 @@ export default function SignUp() {
                             variant="contained"
                             color="primary"
                             className={classes.submit}>
-                            {loading ? <Loader /> : 'Sign up'}
+                            {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign up'}
                         </Button>
                         <div className={classes.methodSeparator} align="center" variant="body2">
                             <hr className={classes.separator} />OR<hr className={classes.separator} />
                         </div>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <GoogleLogin
                                     clientId="754246735652-rt5pm47ctndoeonb3qcehaeh1krri2j4.apps.googleusercontent.com"
@@ -265,7 +263,7 @@ const useStyles = makeStyles(theme => ({
     },
     form: {
         width: '100%',
-        padding: '2rem',
+        padding: '1.5rem',
         borderRadius: '0.5rem',
         background: 'inherit',
         backgroundColor: 'white',
@@ -274,6 +272,9 @@ const useStyles = makeStyles(theme => ({
     title: {
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    textfield: {
+        margin: '0.5rem 0',
     },
     submit: {
         margin: theme.spacing(2, 0, 0, 0),
@@ -286,8 +287,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         fontSize: '0.75rem',
         color: 'rgba(47,64,80,.25);',
-        marginTop: '1rem',
-        marginBottom: '1rem',
+        margin: '0.5rem 0',
     },
     methodBtn: {
         color: '#0e1318',
@@ -312,7 +312,7 @@ const useStyles = makeStyles(theme => ({
         height: '1px',
         border: '0',
         borderTop: '1px solid hsl(0, 0%, 90%)',
-        margin: '1em 0',
+        margin: '1rem 0',
         padding: '0',
         flex: '1 0',
     },
@@ -324,11 +324,11 @@ const useStyles = makeStyles(theme => ({
             margin: 'auto 0 0 0',
         },
         form: {
-            padding: '1.5rem',
+            padding: '1rem',
             borderRadius: '0.5rem 0.5rem 0 0',
         },
         textfield: {
-            margin: '0.5rem 0'
+            margin: '0.3rem 0'
         },
         methodSeparator: {
             margin: '0'
