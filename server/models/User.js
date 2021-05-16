@@ -16,6 +16,12 @@ const userSchema = mongoose.Schema(
         password: {
             type: String
         },
+        googleToken: {
+            type: String
+        },
+        facebookToken: {
+            type: String
+        }
     },
     {
         timestamps: true,
