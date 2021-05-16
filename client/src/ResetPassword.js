@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
     Box, Button,
@@ -20,19 +21,14 @@ import { checkPassword } from './utils'
 import { requestPasswordReset, resetPassword, checkCode } from './Axios';
 
 export default function ResetPassword() {
+    const history = useHistory()
     const classes = useStyles()
 
     const [email, setEmail] = useState('')
     const [code, setCode] = useState('')
 
-    const backtoEmail = e => {
-        e.preventDefault();
-        setEmail('');
-    }
-    const backtoLogin = e => {
-        e.preventDefault();
-        console.log("Back to log in");
-    }
+    const backtoEmail = () => setEmail('')
+    const backtoLogin = () => history.push('/login')
 
     const Email = (props) => {
         const [email, setEmail] = useState('')
@@ -190,8 +186,8 @@ export default function ResetPassword() {
                 setLoading(true)
                 setAlert('')
                 await resetPassword({ email, code, password })
-                console.log('Back to login');
                 setLoading(false)
+                backtoLogin()
             } catch (error) {
                 setAlert(error.response.data.error);
                 setLoading(false)
