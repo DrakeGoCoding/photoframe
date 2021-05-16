@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import Nav from './Nav'
+import footer from './Footer'
 import {
     makeStyles,
     Button,
@@ -15,8 +17,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
-
 import bgHome5 from './assets/bgHome5.jpg'
+import Footer from './Footer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,14 +36,18 @@ export default function Home() {
     const [login, setLogin] = useState(true)
     return (
         <div className={classes.root}>
-            
+            <Nav/>
+            <Container1/>
+            <Album />
+            <FeedBack/>
+            <Footer/>
         </div>
     )
 }
 
 
 //Con1
-export const Container1 = () => {
+const Container1 = () => {
     const classes = useStylesCon1();
     return (
         <Grid container id="container" className={classes.gridRoot} style={{ backgroundImage: `url(${bgHome5})` }} >
@@ -125,7 +131,7 @@ const useStylesCon1 = makeStyles((theme) => ({
 //End Con1
 
 //Album
-export const Album = () => {
+const Album = () => {
     const classes = useStylesAlbum();
     const theme = useTheme();
 
@@ -204,7 +210,7 @@ const useStylesAlbum = makeStyles((theme) => ({
 
 
 //FeedBack
-export const FeedBack = () => {
+const FeedBack = () => {
     const classes = useStylesFeedBack();
 
     const [name, setName] = useState('');
