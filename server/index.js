@@ -6,7 +6,7 @@ const app = express()
 const cors = require('cors')
 const connection = require('./db')
 
-const port = 8080
+const PORT = process.env.PORT || 8080
 
 const db = async () => {
     await connection()
@@ -23,6 +23,6 @@ app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message })
 })
 
-app.listen(port, () => { console.log('Listening to port:' + port) })
+app.listen(PORT, () => { console.log('Listening to PORT:' + PORT) })
 
 module.exports = app
