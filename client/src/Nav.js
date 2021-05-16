@@ -42,10 +42,10 @@ const StyledMenu = withStyles({
 ));
 const StyledMenuItem = withStyles((theme) => ({}))(MenuItem);
 
-interface Props {
+interface props {
     children: React.ReactElement;
 }
-function HideOnSrcoll({ children }: Props) {
+function HideOnSrcoll({ children }: props) {
     const trigger = useScrollTrigger();
     return (
         <Slide appear={false} direction={"down"} in={!trigger}>
