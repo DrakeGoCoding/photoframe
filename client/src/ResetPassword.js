@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
     Box, Button,
@@ -20,19 +21,14 @@ import { checkPassword } from './utils'
 import { requestPasswordReset, resetPassword, checkCode } from './Axios';
 
 export default function ResetPassword() {
+    const history = useHistory()
     const classes = useStyles()
 
     const [email, setEmail] = useState('')
     const [code, setCode] = useState('')
 
-    const backtoEmail = e => {
-        e.preventDefault();
-        setEmail('');
-    }
-    const backtoLogin = e => {
-        e.preventDefault();
-        console.log("Back to log in");
-    }
+    const backtoEmail = () => setEmail('')
+    const backtoLogin = () => history.push('/login')
 
     const Email = (props) => {
         const [email, setEmail] = useState('')
@@ -167,35 +163,41 @@ export default function ResetPassword() {
         const changePassword = e => {
             const input = e.target.value
             setPassword(input)
-            !checkPassword(input)
-                ? setPasswordAlert('Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
-                : setPasswordAlert('')
+            setPasswordAlert(checkPassword(input) ? '' : 'Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
         }
         const changeConfirmPassword = e => {
             const input = e.target.value
             setConfirmPassword(input)
-            password.localeCompare(input)
-                ? setConfirmPasswordAlert('Password mismatch.')
-                : setConfirmPasswordAlert('')
+            setConfirmPasswordAlert(checkConfirmPassword(input) ? '' : 'Password mismatch.')
+        }
+
+        const checkConfirmPassword = input => input.localeCompare(password) === 0
+
+        const checkInput = () => checkPassword(password) && checkConfirmPassword(confirmPassword)
+
+        const submitPassword = async (e) => {
+            e.preventDefault()
+            const validInput = checkInput()
+            if (!validInput) {
+                setAlert('Invalid input.')
+                return
+            }
+            
+            try {
+                setLoading(true)
+                setAlert('')
+                await resetPassword({ email, code, password })
+                setLoading(false)
+                backtoLogin()
+            } catch (error) {
+                setAlert(error.response.data.error);
+                setLoading(false)
+            }
         }
 
         const togglePasswordVisibility = e => {
             e.preventDefault()
             setPasswordShown(!passwordShown)
-        }
-
-        const submitPassword = async (e) => {
-            e.preventDefault()
-            try {
-                setLoading(true)
-                setAlert('')
-                await resetPassword({ email, code, password })
-                console.log('Back to login');
-                setLoading(false)
-            } catch (error) {
-                setAlert(error.response.data.error);
-                setLoading(false)
-            }
         }
 
         return (

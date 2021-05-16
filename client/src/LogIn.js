@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -12,7 +13,8 @@ import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 import { signin } from './Axios';
 
-export default function LogIn() {
+export default function LogIn({ setToken }) {
+    const history = useHistory()
     const classes = useStyles()
 
     const [email, setEmail] = useState('')
@@ -26,30 +28,66 @@ export default function LogIn() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const account = { email, password }
+        await submitAccount(account) && redirectMain()
+    }
+
+    const submitAccount = async (account) => {
         try {
             setLoading(true)
             setAlertMessage('')
-            const account = { email, password }
-            const token = await signin(account)
-            console.log(token)
+            const response = await signin(account)
             setLoading(false)
+            setToken(response.data.token)
+            return true
         } catch (error) {
             setAlertMessage(error.response.data.error)
-            setLoading(false);
+            setLoading(false)
+            return false
         }
     }
 
-    const responseGoogle = res => {
-        console.log(res.profileObj);
+    const responseGoogle = async (res) => {
+        console.log(res);
     }
 
-    const responseFacebook = res => {
+    const responseFacebook = async (res) => {
         console.log(res);
     }
 
     const togglePasswordVisibility = e => {
         e.preventDefault()
         setPasswordShown(!passwordShown)
+    }
+
+    const redirectMain = () => history.push('/')
+    const redirectSignup = () => history.push('/signup')
+    const redirectResetPassword = () => history.push('/resetpassword')
+
+    const renderGoogleBtn = (renderProps) => {
+        return (
+            <Button
+                className={classes.methodBtn}
+                onClick={renderProps.onClick}
+                fullWidth
+                variant="contained">
+                <Icon className={classes.googleIcon}></Icon>
+                &nbsp;Continue with Google
+            </Button>
+        )
+    }
+
+    const renderFacebookBtn = (renderProps) => {
+        return (
+            <Button
+                className={classes.methodBtn}
+                fullWidth
+                variant="contained"
+                onClick={renderProps.onClick}>
+                <Icon className={classes.facebookIcon}></Icon>
+                &nbsp;Continue with Facebook
+            </Button>
+        )
     }
 
     return (
@@ -96,16 +134,7 @@ export default function LogIn() {
                             <Grid item xs={12}>
                                 <GoogleLogin
                                     clientId="754246735652-rt5pm47ctndoeonb3qcehaeh1krri2j4.apps.googleusercontent.com"
-                                    render={renderProps => (
-                                        <Button
-                                            className={classes.methodBtn}
-                                            onClick={renderProps.onClick}
-                                            fullWidth
-                                            variant="contained">
-                                            <Icon className={classes.googleIcon} />
-                                            &nbsp;Continue with Google
-                                        </Button>
-                                    )}
+                                    render={renderGoogleBtn}
                                     onSuccess={responseGoogle}
                                     onFailure={responseGoogle}
                                     cookiePolicy={'single_host_origin'} />
@@ -113,28 +142,18 @@ export default function LogIn() {
                             <Grid item xs={12}>
                                 <FacebookLogin
                                     appId="529841281727853"
+                                    render={renderFacebookBtn}
                                     callback={responseFacebook}
-                                    scope="public_profile,email"
-                                    render={renderProps => (
-                                        <Button
-                                            className={classes.methodBtn}
-                                            fullWidth
-                                            variant="contained"
-                                            onClick={renderProps.onClick}>
-                                            <Icon className={classes.facebookIcon} />
-                                            &nbsp;Continue with Facebook
-                                        </Button>
-                                    )}
-                                />
+                                    fields="name,email,picture" />
                             </Grid>
                         </Grid>
                         <hr className={classes.separator} />
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">{'Forgot password?'}</Link>
+                                <Link href="#" variant="body2" onClick={redirectResetPassword}>{'Forgot password?'}</Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">{"Sign up for an account"}</Link>
+                                <Link href="#" variant="body2" onClick={redirectSignup}>{"Sign up for an account"}</Link>
                             </Grid>
                         </Grid>
                     </form>

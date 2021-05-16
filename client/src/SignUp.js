@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -15,6 +17,9 @@ import { checkName, checkEmail, checkPassword } from './utils'
 import { signup } from './Axios';
 
 export default function SignUp() {
+    const history = useHistory()
+    const classes = useStyles();
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -49,57 +54,53 @@ export default function SignUp() {
         setConfirmPasswordAlert(checkConfirmPassword(input) ? '' : 'Password mismatch')
     }
 
+    const checkConfirmPassword = input => input.localeCompare(password) === 0
+
+    const checkInput = () =>
+        checkName(name)
+        && checkEmail(email)
+        && checkPassword(password)
+        && checkConfirmPassword(confirmPassword)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const account = { name, email, password }
-        if (!checkInput()) {
-            setAlertMessage("Invalid input.");
-            return;
+        const validInput = checkInput()
+        if (!validInput) {
+            setAlertMessage("Invalid input.")
+            return
         }
-        await submitAccount(account)
+        await submitAccount(account) && redirectLogin()
     }
 
     const submitAccount = async (account) => {
         try {
             setLoading(true)
             setAlertMessage('')
-            const res = await signup(account)
-            console.log(res);
+            await signup(account)
             setLoading(false);
+            return true
         } catch (error) {
-            setAlertMessage(error.response.data.error);
-            setLoading(false);
+            setAlertMessage(error.response.data.error)
+            setLoading(false)
+            return false
         }
     }
-
-    const checkInput = () => {
-        return checkName(name) && checkEmail(email) && checkPassword(password) && checkConfirmPassword(confirmPassword)
-    }
-
-    const checkConfirmPassword = (input) => input.localeCompare(password) === 0
 
     const responseGoogle = async (res) => {
-        const account = {
-            name: res.profileObj.name,
-            email: res.profileObj.email,
-            password: res.profileObj.googleId
-        }
-        await submitAccount(account)
+        console.log(res);
     }
 
     const responseFacebook = async (res) => {
-        const account = {
-            name: res.name,
-            email: res.email,
-            password: res.userID,
-        }
-        await submitAccount(account)
+        console.log(res);
     }
 
     const togglePasswordVisibility = e => {
         e.preventDefault()
         setPasswordShown(!passwordShown)
     }
+
+    const redirectLogin = () => history.push('/login')
 
     const renderGoogleBtn = (renderProps) => {
         return (
@@ -127,7 +128,6 @@ export default function SignUp() {
         )
     }
 
-    const classes = useStyles();
     return (
         <div className={classes.background}>
             <Container component="main" maxWidth="sm" className={classes.container}>
@@ -215,7 +215,7 @@ export default function SignUp() {
                             </Grid>
                         </Grid>
                         <hr className={classes.separator} />
-                        <Link href="#" variant="body2" align="center">{"Already have an account? Log in"}</Link>
+                        <Link href="#" variant="body2" align="center" onClick={redirectLogin}>{"Already have an account? Log in"}</Link>
                     </form>
                 </div>
                 <Box className={classes.footer} p={2}>
