@@ -128,8 +128,6 @@ export default function Nav() {
 
 
     const [anchorElAC, setAnchorElAC] = useState(null);
-
-
     const handleClickAccount = (event) => {
         setAnchorElAC(event.currentTarget);
     };
@@ -137,11 +135,17 @@ export default function Nav() {
         setAnchorElAC(null);
     };
 
+    const albumHandle =()=>{
+        if(!login){
+            history.push("/login");
+        }
+    }
+
     return (
         <HideOnSrcoll>
             <AppBar className={classes.bar} >
                 <Toolbar className={classes.toolbar}>
-                    <img Button onClick={() => history.push("/")} alt="Logo" src={logo} className={classes.logo} />
+                    <img Button alt="Logo" src={logo} className={classes.logo} />
                     {isMatch ? (<><DrawerComponent /></>)
                         : (
                             <div className={classes.wrapBtnNUT}>
@@ -162,7 +166,8 @@ export default function Nav() {
                                     offset={0}
                                     duration={500}
                                     delay={100}>
-                                    <Button className={classes.btnNUT}>Album</Button>
+                                    <Button className={classes.btnNUT}
+                                        onClick={albumHandle}>Album</Button>
                                 </Link>
                                 <Link
                                     className={classes.btnNUT}
@@ -187,7 +192,7 @@ export default function Nav() {
                                         </StyledMenu>
                                     </>)
                                     : (
-                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount} >LOGIN</Button>
+                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount} onClick={history.push("/login")}>LOGIN</Button>
                                     )}
                             </div>
                         )}

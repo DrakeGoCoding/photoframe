@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useHistory } from "react-router-dom";
+import { Link } from 'react-scroll'
 import {
     makeStyles,
     Drawer,
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
     nested: {
         paddingLeft: theme.spacing(2)
-      }
+    }
 }))
 
 export default function DrawerComponent() {
@@ -40,12 +42,7 @@ export default function DrawerComponent() {
     const [openDrawer, setOpenDrawer] = useState(false);
     const classes = useStyles();
     const [login, setLogin] = useState(true)
-
-    const [open, setOpen] = React.useState(false);
-    const handleClick = () => {
-        setOpen(!open);
-    };
-
+    let history = useHistory();
     return (
         <>
             <Drawer
@@ -53,60 +50,56 @@ export default function DrawerComponent() {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}>
                 <List>
-                    <ListItem button onClick={handleClick}>
+                    <Link
+                        activeClass="active"
+                        to="album" spy={true}
+                        smooth={true}
+                        offset={0}
+                        duration={500}
+                        delay={100}>
+                        <ListItem button >
                         <ListItemIcon >
                             <ExtensionIcon />
                         </ListItemIcon>
-                        <ListItemText primary="MORE" />
-                        {open ? <ExpandLess /> : <ExpandMore />}
+                        <ListItemText primary="Album" />
                     </ListItem>
-                    <Collapse className={classes.nested} in={open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItem button>
-                                <ListItemIcon >
-                                    <ContactsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Contact" />
-                            </ListItem>
-                        </List>
-                        <List component="div" disablePadding>
-                            <ListItem button>
-                                <ListItemIcon >
-                                    <HelpIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Guide" />
-                            </ListItem>
-                        </List>
-                        <List component="div" disablePadding>
-                            <ListItem button>
-                                <ListItemIcon >
-                                    <EmojiObjectsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Tips" />
-                            </ListItem>
-                        </List>
-                    </Collapse>
+                    </Link>
+                    
+                    <Link
+                        activeClass="active"
+                        to="feedback" spy={true}
+                        smooth={true}
+                        offset={0}
+                        duration={500}
+                        delay={100}>
+                        <ListItem button >
+                        <ListItemIcon >
+                            <ExtensionIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Contact" />
+                    </ListItem>
+                    </Link>
                     {login ? (
                         <>
                             <ListItem button className={classes.listItem}>
                                 <ListItemIcon >
                                     <AssignmentIndIcon />
                                 </ListItemIcon>
-                                <ListItemText>ACCOUNT</ListItemText>
+                                <ListItemText primary="Profile" />
                             </ListItem>
                             <ListItem button className={classes.listItem}>
                                 <ListItemIcon >
                                     <ExitToAppIcon />
                                 </ListItemIcon>
-                                <ListItemText>LOG OUT</ListItemText>
+                                <ListItemText primary="Log out" />
                             </ListItem>
                         </>
                     ) : (
-                        <ListItem button className={classes.listItem}>
+                        <ListItem button className={classes.listItem} onClick={() => history.push("/login")}>
                             <ListItemIcon >
                                 <AssignmentIndIcon />
                             </ListItemIcon>
-                            <ListItemText>LOGIN</ListItemText>
+                            <ListItemText primary="Login" />
                         </ListItem>
                     )}
                 </List>

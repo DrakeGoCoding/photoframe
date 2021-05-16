@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Nav from './Nav'
-import footer from './Footer'
+
 import {
     makeStyles,
     Button,
@@ -38,7 +38,7 @@ export default function Home() {
         <div className={classes.root}>
             <Nav/>
             <Container1/>
-            <Album />
+            {login && <Album />}
             <FeedBack/>
             <Footer/>
         </div>
