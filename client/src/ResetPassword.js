@@ -163,25 +163,26 @@ export default function ResetPassword() {
         const changePassword = e => {
             const input = e.target.value
             setPassword(input)
-            !checkPassword(input)
-                ? setPasswordAlert('Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
-                : setPasswordAlert('')
+            setPasswordAlert(checkPassword(input) ? '' : 'Use 8+ characters with at least 1 digit, 1 uppercase and 1 lowercase.')
         }
         const changeConfirmPassword = e => {
             const input = e.target.value
             setConfirmPassword(input)
-            password.localeCompare(input)
-                ? setConfirmPasswordAlert('Password mismatch.')
-                : setConfirmPasswordAlert('')
+            setConfirmPasswordAlert(checkConfirmPassword(input) ? '' : 'Password mismatch.')
         }
 
-        const togglePasswordVisibility = e => {
-            e.preventDefault()
-            setPasswordShown(!passwordShown)
-        }
+        const checkConfirmPassword = input => input.localeCompare(password) === 0
+
+        const checkInput = () => checkPassword(password) && checkConfirmPassword(confirmPassword)
 
         const submitPassword = async (e) => {
             e.preventDefault()
+            const validInput = checkInput()
+            if (!validInput) {
+                setAlert('Invalid input.')
+                return
+            }
+            
             try {
                 setLoading(true)
                 setAlert('')
@@ -192,6 +193,11 @@ export default function ResetPassword() {
                 setAlert(error.response.data.error);
                 setLoading(false)
             }
+        }
+
+        const togglePasswordVisibility = e => {
+            e.preventDefault()
+            setPasswordShown(!passwordShown)
         }
 
         return (
