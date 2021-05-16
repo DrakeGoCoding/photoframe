@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import DrawerComponent from './DrawerComponent'
+import { useHistory } from "react-router-dom";
 import {
     makeStyles,
     useTheme,
     withStyles
 } from '@material-ui/core/styles';
+import { Link } from 'react-scroll'
 
 import {
     useMediaQuery,
@@ -83,10 +85,13 @@ const useStyles = makeStyles((theme) => ({
             fontSize: 'small'
         }
     },
+    wrapBtnNUT: {
+        width:'50%'
+    },
     btnNUT: {
         textTransform: 'uppercase',
         color: '#039be5',
-        marginRight: '4em',
+        marginLeft: '2.5em',
         fontWeight: '600',
         [theme.breakpoints.down('sm')]: {
             fontSize: 'small'
@@ -113,6 +118,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Nav() {
+    let history = useHistory();
 
     const [login, setLogin] = useState(true)
 
@@ -135,13 +141,39 @@ export default function Nav() {
         <HideOnSrcoll>
             <AppBar className={classes.bar} >
                 <Toolbar className={classes.toolbar}>
-                    <img alt="Logo" src={logo} className={classes.logo} />
+                    <img Button onClick={() => history.push("/")} alt="Logo" src={logo} className={classes.logo} />
                     {isMatch ? (<><DrawerComponent /></>)
                         : (
-                            <div>
-                                <Button className={classes.btnNUT} size="nomal">album</Button>
-                                <Button className={classes.btnNUT} size="nomal" color="primary">contact</Button>
-                                <Button className={classes.btnNUT} size="nomal" color="primary">about</Button>
+                            <div className={classes.wrapBtnNUT}>
+                                <Link
+                                    activeClass="active"
+                                    to="container" spy={true}
+                                    smooth={true}
+                                    offset={0}
+                                    duration={500}
+                                    delay={100}>
+                                    <Button className={classes.btnNUT}>Home</Button>
+                                </Link>
+                                <Link
+                                    className={classes.btnNUT}
+                                    activeClass="active"
+                                    to="album" spy={true}
+                                    smooth={true}
+                                    offset={0}
+                                    duration={500}
+                                    delay={100}>
+                                    <Button className={classes.btnNUT}>Album</Button>
+                                </Link>
+                                <Link
+                                    className={classes.btnNUT}
+                                    activeClass="active"
+                                    to="feedback" spy={true}
+                                    smooth={true}
+                                    offset={0}
+                                    duration={500}
+                                    delay={100}>
+                                    <Button className={classes.btnNUT}>Contact</Button>
+                                </Link>
                                 {login ? (
                                     <>
                                         <Button className={classes.btnAccount} variant="outlined" onClick={handleClickAccount}>account</Button>
@@ -155,7 +187,7 @@ export default function Nav() {
                                         </StyledMenu>
                                     </>)
                                     : (
-                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount}>LOGIN</Button>
+                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount} >LOGIN</Button>
                                     )}
                             </div>
                         )}

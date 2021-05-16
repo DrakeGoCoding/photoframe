@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Nav from './Nav'
-import Fotter from './Footer'
 import {
     makeStyles,
     Button,
@@ -35,23 +33,18 @@ export default function Home() {
     const classes = useStyles();
     const [login, setLogin] = useState(true)
     return (
-            <div className={classes.root}>
-                <Nav />
-                <Container1 />
-                {login && <Album />}
-                <hr />
-                <FeedBack />
-                <Fotter />
-            </div>
+        <div className={classes.root}>
+            
+        </div>
     )
 }
 
 
 //Con1
-const Container1 = () => {
+export const Container1 = () => {
     const classes = useStylesCon1();
     return (
-        <Grid container className={classes.gridRoot} style={{ backgroundImage: `url(${bgHome5})` }} >
+        <Grid container id="container" className={classes.gridRoot} style={{ backgroundImage: `url(${bgHome5})` }} >
             <Grid item xs={8} className={classes.box} >
                 <span className={classes.slogan}>MAKE YOUR PHOTO BETTER </span>
                 <span className={classes.sub}>Iet's create your ideas...</span>
@@ -132,7 +125,7 @@ const useStylesCon1 = makeStyles((theme) => ({
 //End Con1
 
 //Album
-const Album = () => {
+export const Album = () => {
     const classes = useStylesAlbum();
     const theme = useTheme();
 
@@ -152,7 +145,7 @@ const Album = () => {
     const [visiable, setVisiable] = useState(6)
     useEffect(() => { setAlbum() });
     return (
-        <div className={classes.album} >
+        <div id="album" className={classes.album} >
             <span className={classes.yourAlbum}>Your Album</span>
             <Grid container justify='center' >
                 <div className={classes.main_album}>
@@ -211,7 +204,7 @@ const useStylesAlbum = makeStyles((theme) => ({
 
 
 //FeedBack
-const FeedBack = () => {
+export const FeedBack = () => {
     const classes = useStylesFeedBack();
 
     const [name, setName] = useState('');
@@ -270,7 +263,7 @@ const FeedBack = () => {
         }
     }
     return (
-        <div className={classes.root}>
+        <div id="feedback" className={classes.root}>
 
             <p className={classes.contactLabel}>Get in Touch with Us</p>
             <Grid className={classes.grid} container spacing={5}>

@@ -1,19 +1,21 @@
 import './App.css';
-//import Nav from './Nav'
-import Home from './Home'
+import Nav from './Nav'
+import { Container1, Album, FeedBack } from './Home'
 // import LogIn from './LogIn';
 // import SignUp from './SignUp';
 // import ResetPassword from './ResetPassword'
+import Fotter from './Footer'
 
 function App() {
     return (
-        <div className="App">
-            {/* <Nav /> */}
-            <Home/>
-            {/* <LogIn /> */}
-            {/* <SignUp /> */}
-            {/* <ResetPassword /> */}
-        </div>
+        <>
+            <Nav/>
+            <Container1/>
+            <Album /><br/>
+            <hr/>
+            <FeedBack/>
+            <Fotter/>
+        </>
     );
 }
 
