@@ -9318,13 +9318,6 @@ react-otp-input@^2.3.0:
   resolved "https://registry.yarnpkg.com/react-otp-input/-/react-otp-input-2.3.0.tgz#2457b47540e2de2751c3a3e14311452b0c8313a8"
   integrity sha512-xzljlohVaPkUqO4H61x4r7KMRSq2ZPYFFZeSqqVXid+kJNL1UekSBP1xPafvI0eGNpus/PA1447jYZf2EJRY0A==
 
-react-password-strength-bar@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/react-password-strength-bar/-/react-password-strength-bar-0.3.3.tgz#c6b7278f4ff550f2cd03174526ac5f7a0bc92365"
-  integrity sha512-VYi1LpVORBUgP/8ymnDhMKpRwcymyg0MAzoeGFyyrUo3m8rxzAYDfQyzfflWGKDw5o3XT6WlxWtt+0m8uncJEw==
-  dependencies:
-    zxcvbn "4.4.2"
-
 react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
@@ -11824,8 +11817,3 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
-
-zxcvbn@4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/zxcvbn/-/zxcvbn-4.4.2.tgz#28ec17cf09743edcab056ddd8b1b06262cc73c30"
-  integrity sha1-KOwXzwl0PtyrBW3dixsGJizHPDA=
