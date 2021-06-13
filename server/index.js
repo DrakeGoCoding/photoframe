@@ -5,22 +5,24 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const connection = require('./db')
+const cookieParser = require('cookie-parser')
 
 const PORT = process.env.PORT || 8080
 
 const db = async () => {
-    await connection()
+	await connection()
 }
 db()
 
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.use("/auth", require("./routes/authRoute"))
 
 app.use((error, req, res, next) => {
-    res.status(500).json({ error: error.message })
+	res.status(500).json({ error: error.message })
 })
 
 app.listen(PORT, () => { console.log('Listening to PORT:' + PORT) })

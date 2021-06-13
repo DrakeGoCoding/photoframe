@@ -9,11 +9,11 @@ export default function Navigation() {
 
     const login = token => {
         setToken(token)
-        localStorage.setItem('accessToken', token)
+		localStorage.setItem('token', token);
     }
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken')
+        const token = localStorage.getItem('token')
         if (token) {
             try {
                 setToken(token)
