@@ -18,7 +18,7 @@ import Countdown from 'react-countdown'
 import BackgroundImage from './assets/bg.jpg'
 
 import { checkPassword } from './utils'
-import { requestPasswordReset, resetPassword, checkCode } from './Axios';
+import { requestPasswordReset, resetPassword, checkResetPasswordCode } from './Axios';
 
 export default function ResetPassword() {
     const history = useHistory()
@@ -90,7 +90,7 @@ export default function ResetPassword() {
             try {
                 setLoading(true)
                 setAlert('')
-                await checkCode({ code })
+                await checkResetPasswordCode({ code })
                 props.setCode(code)
                 setLoading(false)
             } catch (error) {

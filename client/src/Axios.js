@@ -27,6 +27,6 @@ export const resetPassword = (body) => {
     return instance.post('/auth/resetPassword', body)
 }
 
-export const checkCode = (body) => {
+export const checkResetPasswordCode = (body) => {
     return instance.post('/auth/code', body)
 }
