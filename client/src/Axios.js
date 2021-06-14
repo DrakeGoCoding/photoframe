@@ -30,3 +30,11 @@ export const resetPassword = (body) => {
 export const checkResetPasswordCode = (body) => {
     return instance.post('/auth/code', body)
 }
+
+export const uploadPhoto = (body) => {
+	return instance.post('/photo/upload', body)
+}
+
+export const getAllPhotosFromUser = (userId) => {
+	return instance.get(`/photo/${userId}`)
+}

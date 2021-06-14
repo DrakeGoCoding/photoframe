@@ -11,7 +11,7 @@ import {
     TextField, Typography
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from './assets/Alert'
+import Alert from './Alert'
 import OtpInput from 'react-otp-input'
 import Countdown from 'react-countdown'
 
