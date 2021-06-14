@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 8080
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const connection = require('./db')
+const connection = require('./db/db')
 const cookieParser = require('cookie-parser')
 
 const db = async () => {
