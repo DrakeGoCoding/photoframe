@@ -12,7 +12,7 @@ const db = async () => {
 	await connection()
 }
 
-const authMiddleware = require('./middleware/authMiddleware')
+const authMiddleware = require('./middlewares/authMiddleware')
 const authRouter = require('./routes/authRoute')
 const photoRouter = require('./routes/photoRoute')
 
