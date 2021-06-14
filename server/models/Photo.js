@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 
 const photoSchema = mongoose.Schema(
 	{
-		path: String,
+		owner: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User'
+		},
+		cloudinaryId: String,
+		url: String,
 		createdAt: {
 			type: Date,
 			default: Date.now

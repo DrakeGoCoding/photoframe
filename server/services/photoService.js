@@ -1,82 +1,81 @@
 const { cloudinary } = require('../utils/cloudinary/cloudinary')
+const Photo = require('../models/Photo');
 
 const uploadPhoto = async (userId, fileStr) => {
-	if (!fileStr) {
-		console.log("No file specified.");
+	if (!fileStr)
 		throw new Error("No file specified.")
-	}
 
 	try {
 		const result = await cloudinary.uploader.upload(fileStr, { folder: userId })
-		console.log(`Upload photo from user ${userId} successfully`);
-		return result
+		const cloudinaryId = result.public_id.split('/')[1]
+		const photo = new Photo({
+			owner: userId,
+			cloudinaryId: cloudinaryId,
+			url: result.url
+		})
+		photo.save((err, doc) => {
+			if (err) throw err
+			console.log(`Upload photo from user ${userId} successfully`);
+		})
+		return photo
 	} catch (error) {
 		throw new Error('Error on uploading. Please check your photo again.')
 	}
 }
 
-const deletePhoto = async (userId, photoId) => {
-	if (!userId) {
+const deletePhoto = async (userId, cloudinaryId) => {
+	if (!userId)
 		throw new Error("No user id specified.")
-	}
 
-	if (!photoId) {
+	if (!cloudinaryId)
 		throw new Error("No photo id specified.")
-	}
 
-	const photoExist = await findPhoto(userId, photoId)
-
-	if (!photoExist) {
-		throw new Error(`Photo ${userId}/${photoId} not found.`)
-	}
+	const photo = await getPhoto(userId, cloudinaryId)
+	if (!photo)
+		throw new Error(`Photo ${cloudinaryId} not found.`)
 
 	try {
-		await cloudinary.uploader.destroy(`${userId}/${photoId}`)
-		console.log(`Photo ${userId}/${photoId} deleted successfully.`)
+		await cloudinary.uploader.destroy(`${userId}/${cloudinaryId}`)
+		Photo.findOneAndDelete({ cloudinaryId }).exec(err => {
+			if (err) throw err
+			console.log(`Photo ${cloudinaryId} deleted successfully.`)
+		})
 		return true
 	} catch (error) {
-		throw new Error(`Error on deleting photo ${userId}/${photoId}.`)
+		throw new Error(`Error on deleting photo ${cloudinaryId}.`)
 	}
 }
 
-const findPhoto = async (userId, photoId) => {
-	try {
-		const { resources } = await cloudinary.search
-			.expression(`public_id=${userId}/${photoId}`)
-			.max_results(1)
-			.execute()
+const getPhoto = async (userId, cloudinaryId) => {
+	if (!userId)
+		throw new Error("No user id specified.")
 
-		if (resources.length === 0) return false
-		return true
+	if (!cloudinaryId)
+		throw new Error("No photo id specified.")
+
+	try {
+		const photo = await Photo.findOne({ owner: userId, cloudinaryId }).populate('owner').exec()
+		return photo
 	} catch (error) {
-		console.log(error)
-		return false
+		throw new Error(`Photo ${cloudinaryId} not found.`)
 	}
 }
 
 const getAllPhotosFromUser = async (userId) => {
-	if (!userId) {
-		console.log("No user id specified.")
+	if (!userId)
 		throw new Error("No user id specified.")
-	}
 
 	try {
-		const { resources } = await cloudinary.search
-			.expression(`folder=${userId}`)
-			.execute()
-
-		const publicIds = resources.map(file => file.public_id)
-		console.log(publicIds);
-		return publicIds
+		const photos = await Photo.find({ owner: userId }).populate('owner').exec()
+		return photos
 	} catch (error) {
-		console.error(error);
 		throw error
 	}
-
 }
 
 module.exports = {
 	uploadPhoto,
 	deletePhoto,
+	getPhoto,
 	getAllPhotosFromUser,
 }
