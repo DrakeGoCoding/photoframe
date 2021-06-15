@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import SignUp from './SignUp'
 import LogIn from './LogIn'
 import ResetPassword from './ResetPassword'
-import Editor from './Editor'
+import PhotoEditor from './PhotoEditor'
+import Upload from './Upload'
 
 export default function Navigation() {
 	const [token, setToken] = useState('')
@@ -47,9 +48,8 @@ export default function Navigation() {
 						<Route path="/settings">
 							<p>Account setting page</p>
 						</Route>
-						<Route path="/editor">
-							<Editor />
-						</Route>
+						<Route path="/editor/:id" component={PhotoEditor} />
+						<Route path="/upload" component={Upload}/>
 					</Switch>
 			}
 		</Router>

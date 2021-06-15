@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { uploadPhoto } from './Axios'
 
-export default function Editor() {
+// Test upload photo to db
+
+export default function Upload() {
 	const [previewSource, setPreviewSource] = useState('')
 
 	const changePhoto = e => {
