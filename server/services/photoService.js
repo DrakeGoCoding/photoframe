@@ -11,11 +11,15 @@ const uploadPhoto = async (userId, fileStr) => {
 		const photo = new Photo({
 			owner: userId,
 			cloudinaryId: cloudinaryId,
-			url: result.url
+			url: result.url,
+			width: result.width,
+			height: result.height,
+			format: result.format,
 		})
 		photo.save((err, doc) => {
 			if (err) throw err
 			console.log(`Upload photo from user ${userId} successfully`);
+			console.log(photo);
 		})
 		return photo
 	} catch (error) {
@@ -55,6 +59,9 @@ const getPhoto = async (userId, cloudinaryId) => {
 
 	try {
 		const photo = await Photo.findOne({ owner: userId, cloudinaryId }).populate('owner').exec()
+		if (!photo)
+			throw new Error(`Photo ${cloudinaryId} not found.`)
+
 		return photo
 	} catch (error) {
 		throw new Error(`Photo ${cloudinaryId} not found.`)

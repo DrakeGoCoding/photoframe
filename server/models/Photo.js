@@ -8,7 +8,10 @@ const photoSchema = mongoose.Schema(
 		},
 		cloudinaryId: String,
 		url: String,
-		createdAt: {
+		width: Number,
+		height: Number,
+		format: String,
+		uploadedAt: {
 			type: Date,
 			default: Date.now
 		}

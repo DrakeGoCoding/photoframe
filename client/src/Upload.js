@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router'
+
 import { uploadPhoto } from './Axios'
 
 // Test upload photo to db
 
 export default function Upload() {
+	const history = useHistory()
 	const [previewSource, setPreviewSource] = useState('')
 
 	const changePhoto = e => {
@@ -25,7 +28,7 @@ export default function Upload() {
 		if (!previewSource) return
 		try {
 			const result = await uploadPhoto({ data: previewSource })
-			console.log(result.data);
+			history.push(`/editor/${result.data.cloudinaryId}`)
 		} catch (error) {
 			console.log(error.response)
 		}

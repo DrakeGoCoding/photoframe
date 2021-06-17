@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router'
+import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Typography } from '@material-ui/core'
+import { Button, Slider, Tooltip, Typography } from '@material-ui/core'
 import SaveIcon from '@material-ui/icons/Save';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import TuneIcon from '@material-ui/icons/Tune';
+import CropIcon from '@material-ui/icons/Crop';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import { uploadPhoto, getPhoto } from './Axios'
+import { getImageDataUrl } from './utils';
 
 export default function PhotoEditor() {
 	const history = useHistory()
@@ -14,119 +19,169 @@ export default function PhotoEditor() {
 	const photoId = param.id
 	const classes = useStyles()
 
-	const canvasRef = useRef(null)
-	const contextRef = useRef(null)
-	const ratioRef = useRef(1)
+	const imageRef = useRef(null)
+	const filterBtnRef = useRef(null)
+	const editBtnRef = useRef(null)
+	const textBtnRef = useRef(null)
 
-	const [image, setImage] = useState(null)
-	const [isDrawing, setIsDrawing] = useState(false)
+	const [imageData, setImageData] = useState({
+		owner: undefined,
+		id: undefined,
+		url: undefined,
+		width: undefined,
+		height: undefined,
+		format: undefined
+	})
 
-	const startDrawing = ({ nativeEvent }) => {
-		const { offsetX, offsetY, which } = nativeEvent;
-		// Only draw while left mouse is held
-		if (which !== 1)
-			return
+	const DEFAULT_FILTERS = [
+		{
+			name: 'Brightness',
+			property: 'brightness',
+			value: 100,
+			range: {
+				min: 0,
+				max: 200,
+				step: 1
+			},
+			unit: '%'
+		},
+		{
+			name: 'Contrast',
+			property: 'contrast',
+			value: 100,
+			range: {
+				min: 0,
+				max: 200,
+				step: 1
+			},
+			unit: '%'
+		},
+		{
+			name: 'Saturation',
+			property: 'saturate',
+			value: 100,
+			range: {
+				min: 0,
+				max: 200,
+				step: 1
+			},
+			unit: '%'
+		},
+		{
+			name: 'Grayscale',
+			property: 'grayscale',
+			value: 0,
+			range: {
+				min: 0,
+				max: 100,
+				step: 1
+			},
+			unit: '%'
+		},
+		{
+			name: 'Opacity',
+			property: 'opacity',
+			value: 100,
+			range: {
+				min: 0,
+				max: 100,
+				step: 1
+			},
+			unit: '%'
+		},
+		{
+			name: 'Blur',
+			property: 'blur',
+			value: 0,
+			range: {
+				min: 0,
+				max: 10,
+				step: 0.1
+			},
+			unit: 'px'
+		},
+		{
+			name: 'Invert',
+			property: 'invert',
+			value: 0,
+			range: {
+				min: 0,
+				max: 100,
+				step: 1
+			},
+			unit: '%'
+		},
+	]
+	const [imageFilters, setImageFilters] = useState(DEFAULT_FILTERS)
 
-		contextRef.current.beginPath()
-		contextRef.current.moveTo(offsetX / ratioRef.current, offsetY / ratioRef.current)
-		setIsDrawing(true)
+	const [activeBtns, setActiveBtns] = useState([true, false, false])
+
+	const activateBtn = (index) => {
+		const activeBtns = [false, false, false]
+		activeBtns[index] = true
+		setActiveBtns(activeBtns)
 	}
 
-	const finishDrawing = () => {
-		contextRef.current.closePath()
-		setIsDrawing(false)
+	const showFilterPane = () => {
+		activateBtn(0)
 	}
 
-	const draw = ({ nativeEvent }) => {
-		if (!isDrawing)
-			return
-
-		const { offsetX, offsetY } = nativeEvent;
-		contextRef.current.lineTo(offsetX / ratioRef.current, offsetY / ratioRef.current)
-		contextRef.current.stroke()
+	const showEditPane = () => {
+		activateBtn(1)
 	}
 
-	const renderCanvas = (canvasRef, image) => {
-		const canvas = canvasRef.current
-		canvas.width = image.width
-		canvas.height = image.height
-
-		const wRatio = canvas.offsetWidth / image.width
-		const hRatio = canvas.offsetHeight / image.height
-		const ratio = Math.min(wRatio, hRatio)
-		ratioRef.current = ratio
-
-		const context = canvas.getContext('2d')
-		context.lineCap = 'round'
-		context.strokeStyle = 'black'
-		context.lineWidth = 5
-
-		context.clearRect(0, 0, canvas.width, canvas.height)
-		context.drawImage(image, 0, 0, image.width, image.height)
-		contextRef.current = context
+	const showTextPane = () => {
+		activateBtn(2)
 	}
 
-	const resetCanvas = () => {
-		const canvas = canvasRef.current
-		const context = contextRef.current
-		context.clearRect(0, 0, canvas.width, canvas.height)
-		context.drawImage(image, 0, 0, image.width, image.height)
+	const handleChangeFilter = (e, val, optionName) => {
+		setImageFilters([...imageFilters].map(option => {
+			return option.name === optionName ? { ...option, value: val } : option
+		}))
 	}
 
 	const handleDownload = () => {
 		const link = document.createElement('a')
-		link.download = `${photoId}.jpg`
-		link.href = canvasRef.current.toDataURL('image/jpg')
+		link.download = `${photoId}.${imageData.format}`
+		link.href = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format)
 		link.click()
 	}
 
 	const handleSave = async () => {
-		const urlSource = canvasRef.current.toDataURL('image/jpg')
-		try {
-			const result = await uploadPhoto({ data: urlSource })
-			console.log(result.data);
-		} catch (error) {
-			console.log(error.response);
-		}
+
 	}
 
-	const handleResize = () => {
-		const canvas = canvasRef.current
-		const wRatio = canvas.offsetWidth / image.width
-		const hRatio = canvas.offsetHeight / image.height
-		const ratio = Math.min(wRatio, hRatio)
-		ratioRef.current = ratio
+	const cancelEdit = () => {
+
+	}
+
+	const getImageStyle = () => {
+		const filters = imageFilters.map(option => {
+			return `${option.property}(${option.value}${option.unit})`
+		})
+		return { filter: filters.join(' ') }
 	}
 
 	useEffect(() => {
 		if (photoId) {
 			getPhoto(photoId).then(res => {
-				const url = res.data.url
-				const image = document.createElement('img')
-				image.src = url
-				image.crossOrigin = "anonymous"
-				image.onload = () => setImage(image)
+				const data = res.data
+				// console.log(data);
+				setImageData({
+					owner: data.owner.name,
+					id: data.cloudinaryId,
+					url: data.url,
+					width: data.width,
+					height: data.height,
+					format: data.format
+				})
 			}).catch(error => {
-				setImage(null)
+				console.log(error.response);
+				setImageData(null)
+				history.push('/upload')
 			})
-		} else {
-			setImage(null)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-
-	useEffect(() => {
-		if (image) {
-			window.addEventListener('resize', handleResize)
-			return () => window.removeEventListener('resize', handleResize)
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
-	useEffect(() => {
-		if (image && canvasRef)
-			renderCanvas(canvasRef, image)
-	}, [image, canvasRef])
 
 	return (
 		<div className={classes.background}>
@@ -134,10 +189,61 @@ export default function PhotoEditor() {
 				<div className={classes.toolbarSection}>
 					<div className={classes.toolbar}>
 						<div className={classes.toolbarTabs}>
-
+							<Tooltip title="Filter" arrow>
+								<button className={activeBtns[0] ? classNames(classes.toolbarTabs_tab, classes.toolbarTabs_tab_active) : classes.toolbarTabs_tab} onClick={showFilterPane} ref={filterBtnRef}>
+									<TuneIcon className={classes.toolbarTabs_tuneIcon} />
+								</button>
+							</Tooltip>
+							<Tooltip title="Edit" arrow>
+								<button className={activeBtns[1] ? classNames(classes.toolbarTabs_tab, classes.toolbarTabs_tab_active) : classes.toolbarTabs_tab} onClick={showEditPane} ref={editBtnRef}>
+									<CropIcon className={classes.toolbarTabs_cropIcon} />
+								</button>
+							</Tooltip>
+							<Tooltip title="Text" arrow>
+								<button className={activeBtns[2] ? classNames(classes.toolbarTabs_tab, classes.toolbarTabs_tab_active) : classes.toolbarTabs_tab} onClick={showTextPane} ref={textBtnRef}>
+									<TextFieldsIcon className={classes.toolbarTabs_textIcon} />
+								</button>
+							</Tooltip>
 						</div>
 						<div className={classes.toolbarPane}>
+							<div className={activeBtns[0] ? classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active) : classes.toolbarPane_childWrapper}>
+								<div className={classes.toolbarPane_childContent}>
+									<div className={classes.toolFilterPane}>
+										<section className={classes.toolFilterPane_section}>
+											<Typography className={classes.toolFilterPane_sectionHeading} variant="h3">Adjust</Typography>
+											<div className={classes.toolFilterPane_sliderGrid}>
+												{
+													imageFilters.map((option, index) => {
+														return <React.Fragment key={index}>
+															<div className={classes.toolFilterPane_sliderLabel}>{option.name}</div>
+															<div className={classes.toolFilterPane_sliderControl}>
+																<Slider min={option.range.min} max={option.range.max} step={option.range.step} value={option.value} onChange={(e, val) => handleChangeFilter(e, val, option.name)} />
+															</div>
+														</React.Fragment>
+													})
+												}
+											</div>
+										</section>
+										<section className={classes.toolFilterPane_section}>
+											<button className={classes.toolFilterPane_resetBtn} onClick={() => setImageFilters(DEFAULT_FILTERS)} style={{ float: 'right' }}>Reset</button>
+										</section>
+									</div>
+								</div>
+							</div>
+							<div className={activeBtns[1] ? classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active) : classes.toolbarPane_childWrapper}>
+								<div className={classes.toolbarPane_childContent}>
+									<div className={classes.toolEditPane}>
 
+									</div>
+								</div>
+							</div>
+							<div className={activeBtns[2] ? classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active) : classes.toolbarPane_childWrapper}>
+								<div className={classes.toolbarPane_childContent}>
+									<div className={classes.toolTextPane}>
+
+									</div>
+								</div>
+							</div>
 						</div>
 						<div className={classes.toolbarUnibar}>
 
@@ -152,14 +258,19 @@ export default function PhotoEditor() {
 							</Button>
 							<Typography className={classes.headerBar_title} variant="h2">Choose an image</Typography>
 							<div className={classes.headerBar_rightBtns}>
-								<Button className={classes.headerBar_saveBtn} variant="contained" color="primary" onClick={handleSave}>
-									<SaveIcon className={classes.headerBar_saveIcon} />
-									<span className={classes.headerBar_saveLabel}>Save</span>
-								</Button>
-								<Button className={classes.headerBar_downloadBtn} variant="contained" color="primary" onClick={handleDownload}>
-									<SaveAltIcon className={classes.headerBar_downloadIcon} />
-									<span className={classes.headerBar_saveLabel}>Download</span>
-								</Button>
+								<Tooltip title="Save" arrow>
+									<Button className={classes.headerBar_saveBtn} variant="contained" color="primary" onClick={handleSave}>
+										<SaveIcon className={classes.headerBar_saveIcon} />
+										<span className={classes.headerBar_saveLabel}>Save</span>
+									</Button>
+								</Tooltip>
+								<Tooltip title="Download" arrow>
+									<Button className={classes.headerBar_downloadBtn} variant="contained" color="primary" onClick={handleDownload}>
+										<SaveAltIcon className={classes.headerBar_downloadIcon} />
+										<span className={classes.headerBar_saveLabel}>Download</span>
+									</Button>
+								</Tooltip>
+
 							</div>
 						</div>
 					</div>
@@ -170,12 +281,13 @@ export default function PhotoEditor() {
 									<div className={classes.canvas_image}>
 										<div className={classes.canvasImage}>
 											<div className={classes.canvasImage_workContainer}>
-												<canvas
+												<img
 													className={classes.canvasImage_canvas}
-													onMouseDown={startDrawing}
-													onMouseUp={finishDrawing}
-													onMouseMove={draw}
-													ref={canvasRef} />
+													src={imageData ? imageData.url : ''}
+													alt={imageData ? "" : "image"}
+													crossOrigin="anonymous"
+													ref={imageRef}
+													style={getImageStyle()} />
 											</div>
 										</div>
 									</div>
@@ -189,7 +301,9 @@ export default function PhotoEditor() {
 								<Typography className={classes.footerBar_header} variant="h2">Turn your photos into stunning graphics</Typography>
 								<Typography className={classes.footerBar_subheader} variant="h3">From posters to cards and so much more - You can design anything in PhotoFrame</Typography>
 							</div>
-							<Button className={classes.footerBar_cancelBtn} variant="contained" color="primary" onClick={resetCanvas}>Cancel</Button>
+							<Tooltip title="Cancel" arrow>
+								<Button className={classes.footerBar_cancelBtn} variant="contained" color="primary" onClick={cancelEdit}>Cancel</Button>
+							</Tooltip>
 						</div>
 					</div>
 				</div>
@@ -225,13 +339,104 @@ const useStyles = makeStyles(theme => ({
 		position: 'relative',
 		width: '72px',
 		height: '100%',
-		background: '#232C38'
+		background: '#1a212a'
+	},
+	toolbarTabs_tab: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'relative',
+		margin: 0,
+		padding: 0,
+		width: '100%',
+		height: '72px',
+		zIndex: 2,
+		cursor: 'pointer',
+		border: 'none',
+		background: 'none',
+		filter: 'contrast(0) brightness(200%)',
+	},
+	toolbarTabs_tab_active: {
+		filter: 'none',
+		cursor: 'unset',
+		color: '#039be5',
+		backgroundColor: '#232c38',
+		transition: 'background 0.3s ease-out',
 	},
 	toolbarPane: {
 		position: 'relative',
 		width: '320px',
 		height: '100%',
 		background: '#232C38'
+	},
+	toolbarPane_childWrapper: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		overflowY: 'auto',
+		opacity: 0,
+		transform: 'scale(0.998)',
+		zIndex: -1,
+	},
+	toolbarPane_childWrapper_active: {
+		opacity: 1,
+		transform: 'none',
+		zIndex: 'auto',
+		transition: 'opacity 0.3s ease, transform 0.3s ease'
+	},
+	toolbarPane_childContent: {
+		padding: '24px',
+	},
+	toolFilterPane: {
+
+	},
+	toolFilterPane_section: {
+		marginBottom: '32px',
+	},
+	toolFilterPane_sectionHeading: {
+		marginTop: 0,
+		color: 'white',
+		fontSize: '16px',
+		fontWeight: 400,
+		letterSpacing: 0,
+		lineHeight: 1.6,
+		marginBottom: '16px'
+	},
+	toolFilterPane_sliderGrid: {
+		display: 'grid',
+		gridTemplate: 'auto / min-content auto',
+		gridAutoRows: 'auto',
+		gridRowGap: '16px',
+		gridColumnGap: '24px',
+		alignItems: 'center',
+		width: '100%'
+	},
+	toolFilterPane_sliderLabel: {
+		margin: 0,
+		color: 'rgba(255, 255, 255, 0.65)'
+	},
+	toolFilterPane_sliderControl: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	toolFilterPane_resetBtn: {
+		color: 'rgba(255, 255, 255, 0.65)',
+		margin: 0,
+		padding: 0,
+		border: 'none',
+		background: 'none',
+		fontSize: '14px',
+		fontWeight: 400,
+		lineHeight: 1.6,
+		letterSpacing: 0,
+		cursor: 'pointer',
+		transition: 'color 0.3s',
+		'&:hover': {
+			color: '#039be5'
+		}
 	},
 	toolbarUnibar: {
 		display: 'flex',
@@ -372,7 +577,9 @@ const useStyles = makeStyles(theme => ({
 	},
 	canvasImage_canvas: {
 		imageRendering: 'pixelated',
+		objectFit: 'contain',
 		width: '100%',
+		height: '100%'
 	},
 
 	// FOOTER
