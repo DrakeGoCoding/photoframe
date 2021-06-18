@@ -36,6 +36,5 @@ export function getImageDataUrl(img, width, height, format) {
 	const ctx = canvas.getContext('2d');
 	ctx.filter = img.style.filter
 	ctx.drawImage(img, 0, 0);
-	console.log(canvas);
 	return canvas.toDataURL(`image/${format}`)
 }
