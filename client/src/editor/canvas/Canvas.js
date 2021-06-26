@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import React from 'react'
 
-export default function Canvas({ imageData, imageRef, style }) {
+function Canvas({ imageData, imageRef, style }) {
 	const classes = useStyles()
 
 	return (
@@ -76,3 +76,5 @@ const useStyles = makeStyles(theme => ({
 
 	},
 }))
+
+export default React.memo(Canvas)

@@ -1,41 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { makeStyles } from '@material-ui/core/styles'
-import TuneIcon from '@material-ui/icons/Tune';
-import CropIcon from '@material-ui/icons/Crop';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
 
-import Toolbar from './Toolbar';
-import Headerbar from './Headerbar';
-import Footerbar from './Footerbar';
+import Toolbar from './toolbar/Toolbar';
+import Headerbar from './headerbar/Headerbar';
+import Footerbar from './footerbar/Footerbar';
 
-import { uploadPhoto, getPhoto } from './Axios'
-import { getImageDataUrl } from './utils';
-import Canvas from './Canvas';
+import { getPhotoById } from '../Axios'
+import { getImageDataUrl } from '../utils/utils';
+import Canvas from './canvas/Canvas';
 
-export default function PhotoEditor() {
+export default function Editor() {
 	const history = useHistory()
-	const param = useParams()
-	const photoId = param.id
+	const { id } = useParams()
 	const classes = useStyles()
-
 	const imageRef = useRef(null)
-	const backBtnRef = useRef(null)
-	const toolbarRef = useRef(null)
 
-	const DEFAULT_SERVICES = [{
-		name: 'Filter',
-		active: true,
-		icon: <TuneIcon className={classes.toolbarTabs_tuneIcon} />,
-	}, {
-		name: 'Edit',
-		active: false,
-		icon: <CropIcon className={classes.toolbarTabs_cropIcon} />,
-	}, {
-		name: 'Text',
-		active: false,
-		icon: <TextFieldsIcon className={classes.toolbarTabs_textIcon} />,
-	}]
+	const DEFAULT_SERVICES = [
+		{
+			name: 'Filter',
+			active: false,
+		},
+		{
+			name: 'Edit',
+			active: false,
+		},
+		{
+			name: 'Text',
+			active: false,
+		}
+	]
 	const DEFAULT_FILTERS = [
 		{
 			name: 'Brightness',
@@ -133,12 +127,13 @@ export default function PhotoEditor() {
 		url: undefined,
 		width: undefined,
 		height: undefined,
-		format: undefined
+		format: undefined,
+		uploadedAt: undefined
 	})
 
 	const [imageServices, setImageServices] = useState(DEFAULT_SERVICES)
 	const [imageFilters, setImageFilters] = useState(DEFAULT_FILTERS)
-	const [visibleBackBtn, setVisibleBackBtn] = useState(true)
+	const [visibleBackBtn, setVisibleBackBtn] = useState(false)
 
 	const handleShowPane = (pos) => {
 		setImageServices([...imageServices].map((option, index) => {
@@ -158,7 +153,7 @@ export default function PhotoEditor() {
 
 	const handleDownload = () => {
 		const link = document.createElement('a')
-		link.download = `${photoId}.${imageData.format}`
+		link.download = `${imageData.id}.${imageData.format}`
 		link.href = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format)
 		link.click()
 	}
@@ -168,48 +163,47 @@ export default function PhotoEditor() {
 	}
 
 	const cancelEdit = () => {
-
+		history.push('/')
 	}
 
 	const getImageStyle = () => {
-		const filters = imageFilters.map(option => {
-			return `${option.property}(${option.value}${option.unit})`
-		})
+		const filters = imageFilters.map(option => `${option.property}(${option.value}${option.unit})`)
 		return { filter: filters.join(' ') }
 	}
 
 	useEffect(() => {
-		if (photoId) {
-			getPhoto(photoId).then(res => {
+		async function fetchData() {
+			try {
+				const res = await getPhotoById(id)
 				const data = res.data
-				// console.log(data);
 				setImageData({
 					owner: data.owner.name,
 					id: data.cloudinaryId,
 					url: data.url,
 					width: data.width,
 					height: data.height,
-					format: data.format
+					format: data.format,
+					uploadedAt: data.uploadedAt
 				})
-			}).catch(error => {
+			} catch (error) {
 				setImageData(null)
-				history.push('/upload')
-			})
+				console.log(error.response);
+			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+		fetchData()
+	}, [id])
 
 	return (
 		<div className={classes.background}>
 			<div className={classes.container}>
 				<div className={classes.toolbarSection}>
 					<Toolbar
+						data={imageData}
 						services={imageServices}
 						filters={imageFilters}
 						handleShowPane={handleShowPane}
 						handleChangeFilter={handleChangeFilter}
 						resetFilters={resetFilters}
-						toolbarRef={toolbarRef}
 						visibleBackBtn={visibleBackBtn}
 						setVisibleBackBtn={setVisibleBackBtn} />
 				</div>
@@ -220,7 +214,6 @@ export default function PhotoEditor() {
 							handleShowPane={handleShowPane}
 							handleDownload={handleDownload}
 							handleSave={handleSave}
-							backBtnRef={backBtnRef}
 							visibleBackBtn={visibleBackBtn}
 							setVisibleBackBtn={setVisibleBackBtn}
 						/>

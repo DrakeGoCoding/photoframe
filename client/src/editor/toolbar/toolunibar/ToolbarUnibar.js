@@ -1,6 +1,10 @@
 import React from 'react'
 import classNames from 'classnames'
 import { makeStyles } from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune';
+import CropIcon from '@material-ui/icons/Crop';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+
 import ToolbarUnibarFilterPane from './ToolbarUnibarFilterPane'
 import ToolbarUnibarEditPane from './ToolbarUnibarEditPane'
 import ToolbarUnibarTextPane from './ToolbarUnibarTextPane'
@@ -11,6 +15,7 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 	const SERVICES_DICTIONARY = [
 		{
 			name: 'Filter',
+			icon: <TuneIcon className={classes.toolbarTabs_tuneIcon} />,
 			pane:
 				<ToolbarUnibarFilterPane
 					filters={filters}
@@ -19,11 +24,13 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 		},
 		{
 			name: 'Edit',
+			icon: <CropIcon className={classes.toolbarTabs_cropIcon} />,
 			pane:
 				<ToolbarUnibarEditPane />
 		},
 		{
 			name: 'Text',
+			icon: <TextFieldsIcon className={classes.toolbarTabs_textIcon} />,
 			pane:
 				<ToolbarUnibarTextPane />
 		}
@@ -46,7 +53,7 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 												<button
 													className={classes.toolbarUnibar_mainMenuItem}
 													onClick={() => { handleShowPane(index); setVisibleBackBtn(true) }}>
-													{option.icon}
+													{SERVICES_DICTIONARY[index].icon}
 												</button>
 											</div>
 										</div>
@@ -67,7 +74,7 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 								option.active
 									? classNames(classes.toolbarUnibar_childWrapper, classes.toolbarUnibar_childWrapper_active)
 									: classes.toolbarUnibar_childWrapper}>
-							{SERVICES_DICTIONARY.find(item => item.name === option.name).pane}
+							{SERVICES_DICTIONARY[index].pane}
 						</div>
 					)
 				})

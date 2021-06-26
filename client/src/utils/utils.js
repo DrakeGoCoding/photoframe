@@ -38,3 +38,8 @@ export function getImageDataUrl(img, width, height, format) {
 	ctx.drawImage(img, 0, 0);
 	return canvas.toDataURL(`image/${format}`)
 }
+
+export function convertStringToDate(strDate) {
+	const date = new Date(strDate)
+	return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`
+}

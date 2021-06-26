@@ -1,18 +1,23 @@
 import React from 'react'
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core'
-import { Tooltip } from '@material-ui/core'
+import { makeStyles, Tooltip } from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune';
+import CropIcon from '@material-ui/icons/Crop';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+
+import ToolbarInfoPane from './ToolbarInfoPane';
 import ToolbarFilterPane from './ToolbarFilterPane';
 import ToolbarEditPane from './ToolbarEditPane';
 import ToolbarTextPane from './ToolbarTextPane';
-import ToolbarUnibar from './ToolbarUnibar';
+import ToolbarUnibar from './toolunibar/ToolbarUnibar';
 
-export default function Toolbar({ services, filters, handleShowPane, handleChangeFilter, resetFilters, visibleBackBtn, setVisibleBackBtn }) {
+export default function Toolbar({ data, services, filters, handleShowPane, handleChangeFilter, resetFilters, visibleBackBtn, setVisibleBackBtn }) {
 	const classes = useStyles()
 
 	const SERVICES_DICTIONARY = [
 		{
 			name: 'Filter',
+			icon: <TuneIcon className={classes.toolbarTabs_tuneIcon} />,
 			pane:
 				<ToolbarFilterPane
 					filters={filters}
@@ -21,11 +26,13 @@ export default function Toolbar({ services, filters, handleShowPane, handleChang
 		},
 		{
 			name: 'Edit',
+			icon: <CropIcon className={classes.toolbarTabs_cropIcon} />,
 			pane:
 				<ToolbarEditPane />
 		},
 		{
 			name: 'Text',
+			icon: <TextFieldsIcon className={classes.toolbarTabs_textIcon} />,
 			pane:
 				<ToolbarTextPane />
 		}
@@ -41,11 +48,11 @@ export default function Toolbar({ services, filters, handleShowPane, handleChang
 								<Tooltip title={option.name} arrow>
 									<button
 										className={
-											services[index].active
+											option.active
 												? classNames(classes.toolbarTabs_tab, classes.toolbarTabs_tab_active)
 												: classes.toolbarTabs_tab}
 										onClick={() => { handleShowPane(index); setVisibleBackBtn(true) }}>
-										{option.icon}
+										{SERVICES_DICTIONARY[index].icon}
 									</button>
 								</Tooltip>
 							</React.Fragment>
@@ -54,6 +61,14 @@ export default function Toolbar({ services, filters, handleShowPane, handleChang
 				}
 			</div>
 			<div className={classes.toolbarPane}>
+				<div className={
+					visibleBackBtn
+						? classes.toolbarPane_childWrapper
+						: classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active)}>
+					<div className={classes.toolbarPane_childContent}>
+						<ToolbarInfoPane data={data} />
+					</div>
+				</div>
 				{
 					services.map((option, index) => {
 						return (
@@ -64,7 +79,7 @@ export default function Toolbar({ services, filters, handleShowPane, handleChang
 										? classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active)
 										: classes.toolbarPane_childWrapper}>
 								<div className={classes.toolbarPane_childContent}>
-									{SERVICES_DICTIONARY.find(item => item.name === option.name).pane}
+									{SERVICES_DICTIONARY[index].pane}
 								</div>
 							</div>
 						)

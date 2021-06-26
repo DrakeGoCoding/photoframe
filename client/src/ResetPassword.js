@@ -17,7 +17,7 @@ import Countdown from 'react-countdown'
 
 import BackgroundImage from './assets/bg.jpg'
 
-import { checkPassword } from './utils'
+import { checkPassword } from './utils/utils'
 import { requestPasswordReset, resetPassword, checkResetPasswordCode } from './Axios';
 
 export default function ResetPassword() {

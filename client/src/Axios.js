@@ -35,8 +35,8 @@ export const uploadPhoto = (body) => {
 	return instance.post('/photo/upload', body)
 }
 
-export const getPhoto = (photoId) => {
-	return instance.get(`/photo/${photoId}`)
+export const getPhotoById = (id) => {
+	return instance.get(`/photo/${id}`)
 }
 
 export const getAllPhotosFromUser = (userId) => {

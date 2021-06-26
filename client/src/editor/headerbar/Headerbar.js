@@ -6,10 +6,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-export default function Headerbar({ handleShowPane, handleSave, handleDownload, backBtnRef, visibleBackBtn, setVisibleBackBtn }) {
+export default function Headerbar({ handleShowPane, handleSave, handleDownload, visibleBackBtn, setVisibleBackBtn }) {
 	const classes = useStyles()
 
-	const disableBackBtn = () => {
+	const hideBackBtn = () => {
 		setVisibleBackBtn(false)
 		handleShowPane(-1)
 	}
@@ -22,8 +22,7 @@ export default function Headerbar({ handleShowPane, handleSave, handleDownload, 
 						? classNames(classes.headerBar_backBtn, classes.headerBar_backBtn_enabled)
 						: classes.headerBar_backBtn}
 				variant="contained" color="primary"
-				onClick={disableBackBtn}
-				ref={backBtnRef}>
+				onClick={hideBackBtn}>
 				<ArrowBackIosIcon className={classes.headerBar_backIcon} />
 			</Button>
 
@@ -59,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		padding: '24px 24px 0'
+		padding: '24px 24px 0',
 	},
 	headerBar_backBtn: {
 		display: 'flex',

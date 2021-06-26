@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import SignUp from './SignUp'
 import LogIn from './LogIn'
 import ResetPassword from './ResetPassword'
-import PhotoEditor from './PhotoEditor'
+import Editor from './editor/Editor'
 import Upload from './Upload'
 
 export default function Navigation() {
@@ -48,7 +48,7 @@ export default function Navigation() {
 						<Route path="/settings">
 							<p>Account setting page</p>
 						</Route>
-						<Route path="/editor/:id" component={PhotoEditor} />
+						<Route path="/editor/:id" component={Editor} />
 						<Route path="/upload" component={Upload}/>
 					</Switch>
 			}

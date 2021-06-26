@@ -6,7 +6,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './Alert'
 
 import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import FacebookLogin from 'react-facebook-login'
 
 import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
