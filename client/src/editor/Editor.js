@@ -6,7 +6,7 @@ import Toolbar from './toolbar/Toolbar';
 import Headerbar from './headerbar/Headerbar';
 import Footerbar from './footerbar/Footerbar';
 
-import { getPhotoById } from '../Axios'
+import { deletePhotoById, getPhotoById, uploadPhoto } from '../Axios'
 import { getImageDataUrl } from '../utils/utils';
 import Canvas from './canvas/Canvas';
 
@@ -16,6 +16,15 @@ export default function Editor() {
 	const classes = useStyles()
 	const imageRef = useRef(null)
 
+	const DEFAULT_DATA = {
+		owner: undefined,
+		id: undefined,
+		url: undefined,
+		width: undefined,
+		height: undefined,
+		format: undefined,
+		uploadedAt: undefined
+	}
 	const DEFAULT_SERVICES = [
 		{
 			name: 'Filter',
@@ -36,8 +45,8 @@ export default function Editor() {
 			property: 'brightness',
 			value: 100,
 			range: {
-				min: 0,
-				max: 200,
+				min: 50,
+				max: 150,
 				step: 1
 			},
 			unit: '%'
@@ -47,8 +56,8 @@ export default function Editor() {
 			property: 'contrast',
 			value: 100,
 			range: {
-				min: 0,
-				max: 200,
+				min: 50,
+				max: 150,
 				step: 1
 			},
 			unit: '%'
@@ -64,35 +73,35 @@ export default function Editor() {
 			},
 			unit: '%'
 		},
-		{
-			name: 'Grayscale',
-			property: 'grayscale',
-			value: 0,
-			range: {
-				min: 0,
-				max: 100,
-				step: 1
-			},
-			unit: '%'
-		},
-		{
-			name: 'Opacity',
-			property: 'opacity',
-			value: 100,
-			range: {
-				min: 0,
-				max: 100,
-				step: 1
-			},
-			unit: '%'
-		},
+		// {
+		// 	name: 'Grayscale',
+		// 	property: 'grayscale',
+		// 	value: 0,
+		// 	range: {
+		// 		min: 0,
+		// 		max: 100,
+		// 		step: 1
+		// 	},
+		// 	unit: '%'
+		// },
+		// {
+		// 	name: 'Opacity',
+		// 	property: 'opacity',
+		// 	value: 100,
+		// 	range: {
+		// 		min: 0,
+		// 		max: 100,
+		// 		step: 1
+		// 	},
+		// 	unit: '%'
+		// },
 		{
 			name: 'Blur',
 			property: 'blur',
 			value: 0,
 			range: {
 				min: 0,
-				max: 10,
+				max: 5,
 				step: 0.1
 			},
 			unit: 'px'
@@ -120,19 +129,41 @@ export default function Editor() {
 			unit: '%'
 		},
 	]
+	const DEFAULT_EDITS = [
+		{
+			name: 'Rotate',
+			property: 'rotate',
+			value: 0,
+			active: false
+		},
+		{
+			name: 'Flip',
+			property: 'scale',
+			value: {
+				x: 1,
+				y: 1,
+			},
+			active: false
+		},
+		// {
+		// 	name: 'Crop',
+		// 	active: false
+		// },
+		// {
+		// 	name: 'Resize',
+		// 	property: 'scale',
+		// 	value: {
+		// 		x: 1,
+		// 		y: 1,
+		// 	},
+		// 	active: false
+		// },
+	]
 
-	const [imageData, setImageData] = useState({
-		owner: undefined,
-		id: undefined,
-		url: undefined,
-		width: undefined,
-		height: undefined,
-		format: undefined,
-		uploadedAt: undefined
-	})
-
+	const [imageData, setImageData] = useState(DEFAULT_DATA)
 	const [imageServices, setImageServices] = useState(DEFAULT_SERVICES)
 	const [imageFilters, setImageFilters] = useState(DEFAULT_FILTERS)
+	const [imageEdits, setImageEdits] = useState(DEFAULT_EDITS)
 	const [visibleBackBtn, setVisibleBackBtn] = useState(false)
 
 	const handleShowPane = (pos) => {
@@ -147,8 +178,18 @@ export default function Editor() {
 		}))
 	}
 
+	const handleChangeEdit = (e, val, optionName) => {
+		setImageEdits([...imageEdits].map(option => {
+			return option.name === optionName ? { ...option, value: val } : option
+		}))
+	}
+
 	const resetFilters = () => {
 		setImageFilters(DEFAULT_FILTERS)
+	}
+
+	const resetEdits = () => {
+		setImageEdits(DEFAULT_EDITS)
 	}
 
 	const handleDownload = () => {
@@ -159,16 +200,36 @@ export default function Editor() {
 	}
 
 	const handleSave = async () => {
-
+		const saveConfirmed = window.confirm('This cannot be undone. Are you sure to save changes? ')
+		if (saveConfirmed) {
+			const source = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format)
+			try {
+				await uploadPhoto({ data: source })
+				await deletePhotoById(id)
+				history.push('/')
+			} catch (error) {
+				console.log(error.response);
+			}
+		}
 	}
 
-	const cancelEdit = () => {
-		history.push('/')
+	const handleCancel = () => {
+		window.confirm('Your changes will not be saved. Are you sure to cancel?') && history.push('/')
 	}
 
 	const getImageStyle = () => {
 		const filters = imageFilters.map(option => `${option.property}(${option.value}${option.unit})`)
-		return { filter: filters.join(' ') }
+		const edits = imageEdits.map(option => {
+			if (option.name === 'Rotate') {
+				return `${option.property}(${option.value}deg)`
+			}
+			if (option.name === 'Flip') {
+				return `${option.property}(${option.value.x},${option.value.y})`
+			}
+			return null
+		})
+		console.log(imageRef.current?.parentElement.offsetWidth, imageRef.current?.parentElement.offsetHeight);
+		return { filter: filters.join(' '), transform: edits.join(' ') }
 	}
 
 	useEffect(() => {
@@ -201,9 +262,12 @@ export default function Editor() {
 						data={imageData}
 						services={imageServices}
 						filters={imageFilters}
+						edits={imageEdits}
 						handleShowPane={handleShowPane}
 						handleChangeFilter={handleChangeFilter}
+						handleChangeEdit={handleChangeEdit}
 						resetFilters={resetFilters}
+						resetEdits={resetEdits}
 						visibleBackBtn={visibleBackBtn}
 						setVisibleBackBtn={setVisibleBackBtn} />
 				</div>
@@ -227,7 +291,7 @@ export default function Editor() {
 					</div>
 
 					<div className={classes.footerBarSection}>
-						<Footerbar cancelEdit={cancelEdit} />
+						<Footerbar handleCancel={handleCancel} />
 					</div>
 				</div>
 			</div>

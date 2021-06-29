@@ -42,3 +42,7 @@ export const getPhotoById = (id) => {
 export const getAllPhotosFromUser = (userId) => {
 	return instance.get(`/photo/all/${userId}`)
 }
+
+export const deletePhotoById = (id) => {
+	return instance.delete(`/photo/${id}`)
+} 

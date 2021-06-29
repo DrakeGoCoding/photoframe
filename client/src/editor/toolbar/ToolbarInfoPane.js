@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	toolInfoPane_data: {
 		marginTop: 0,
-		color: '#039be5',
+		color: theme.palette.primary.main,
 		fontSize: '14px',
 		fontWeight: 400,
 		border: 'none',

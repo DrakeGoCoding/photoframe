@@ -4,17 +4,21 @@ import { makeStyles, Tooltip } from '@material-ui/core'
 import TuneIcon from '@material-ui/icons/Tune';
 import CropIcon from '@material-ui/icons/Crop';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-
 import ToolbarInfoPane from './ToolbarInfoPane';
 import ToolbarFilterPane from './ToolbarFilterPane';
 import ToolbarEditPane from './ToolbarEditPane';
 import ToolbarTextPane from './ToolbarTextPane';
 import ToolbarUnibar from './toolunibar/ToolbarUnibar';
 
-export default function Toolbar({ data, services, filters, handleShowPane, handleChangeFilter, resetFilters, visibleBackBtn, setVisibleBackBtn }) {
+export default function Toolbar({
+	data, services, filters, edits,
+	handleShowPane, handleChangeFilter, handleChangeEdit,
+	resetFilters, resetEdits,
+	visibleBackBtn, setVisibleBackBtn
+}) {
 	const classes = useStyles()
 
-	const SERVICES_DICTIONARY = [
+	const SERVICE_UI_DICTIONARY = [
 		{
 			name: 'Filter',
 			icon: <TuneIcon className={classes.toolbarTabs_tuneIcon} />,
@@ -28,7 +32,10 @@ export default function Toolbar({ data, services, filters, handleShowPane, handl
 			name: 'Edit',
 			icon: <CropIcon className={classes.toolbarTabs_cropIcon} />,
 			pane:
-				<ToolbarEditPane />
+				<ToolbarEditPane
+					edits={edits}
+					handleChangeEdit={handleChangeEdit}
+					resetEdits={resetEdits} />
 		},
 		{
 			name: 'Text',
@@ -52,7 +59,7 @@ export default function Toolbar({ data, services, filters, handleShowPane, handl
 												? classNames(classes.toolbarTabs_tab, classes.toolbarTabs_tab_active)
 												: classes.toolbarTabs_tab}
 										onClick={() => { handleShowPane(index); setVisibleBackBtn(true) }}>
-										{SERVICES_DICTIONARY[index].icon}
+										{SERVICE_UI_DICTIONARY[index].icon}
 									</button>
 								</Tooltip>
 							</React.Fragment>
@@ -79,7 +86,7 @@ export default function Toolbar({ data, services, filters, handleShowPane, handl
 										? classNames(classes.toolbarPane_childWrapper, classes.toolbarPane_childWrapper_active)
 										: classes.toolbarPane_childWrapper}>
 								<div className={classes.toolbarPane_childContent}>
-									{SERVICES_DICTIONARY[index].pane}
+									{SERVICE_UI_DICTIONARY[index].pane}
 								</div>
 							</div>
 						)
@@ -87,11 +94,14 @@ export default function Toolbar({ data, services, filters, handleShowPane, handl
 				}
 			</div>
 			<ToolbarUnibar
-				filters={filters}
 				services={services}
+				filters={filters}
+				edits={edits}
 				handleShowPane={handleShowPane}
 				handleChangeFilter={handleChangeFilter}
+				handleChangeEdit={handleChangeEdit}
 				resetFilters={resetFilters}
+				resetEdits={resetEdits}
 				visibleBackBtn={visibleBackBtn}
 				setVisibleBackBtn={setVisibleBackBtn} />
 		</div>
@@ -99,7 +109,6 @@ export default function Toolbar({ data, services, filters, handleShowPane, handl
 }
 
 const useStyles = makeStyles(theme => ({
-
 	/*----------- TOOL BAR ----------- */
 	toolbarSection: {
 		flex: '0 0 auto',
@@ -135,7 +144,7 @@ const useStyles = makeStyles(theme => ({
 	toolbarTabs_tab_active: {
 		filter: 'none',
 		cursor: 'unset',
-		color: '#039be5',
+		color: theme.palette.primary.main,
 		backgroundColor: '#232c38',
 		transition: 'background 0.3s ease-out',
 	},

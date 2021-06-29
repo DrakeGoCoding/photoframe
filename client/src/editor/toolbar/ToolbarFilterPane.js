@@ -16,7 +16,12 @@ export default function ToolBarFilterPane({ filters, handleChangeFilter, resetFi
 								<React.Fragment key={index}>
 									<div className={classes.toolFilterPane_sliderLabel}>{option.name}</div>
 									<div className={classes.toolFilterPane_sliderControl}>
-										<Slider min={option.range.min} max={option.range.max} step={option.range.step} value={option.value} onChange={(e, val) => handleChangeFilter(e, val, option.name)} />
+										<Slider
+											min={option.range.min}
+											max={option.range.max}
+											step={option.range.step}
+											value={option.value}
+											onChange={(e, val) => handleChangeFilter(e, val, option.name)} />
 									</div>
 								</React.Fragment>
 							)
@@ -78,7 +83,7 @@ const useStyles = makeStyles(theme => ({
 		cursor: 'pointer',
 		transition: 'color 0.3s',
 		'&:hover': {
-			color: '#039be5'
+			color: theme.palette.primary.main
 		}
 	},
 }))

@@ -10,7 +10,7 @@ function Canvas({ imageData, imageRef, style }) {
 				<div className={classes.canvas_container}>
 					<div className={classes.canvas_image}>
 						<div className={classes.canvasImage}>
-							<div className={classes.canvasImage_workContainer}>
+							<div className={classes.canvasImage_workContainer} >
 								<img
 									className={classes.canvasImage_canvas}
 									src={imageData ? imageData.url : ''}

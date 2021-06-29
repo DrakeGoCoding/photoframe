@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 		flex: '0 0 auto',
 		display: 'flex',
 		justifyContent: 'center',
-		marginTop: '16px'
+		// marginTop: '16px'
 	},
 	tabPagerItem_tab: {
 		flex: '0 1 auto',
@@ -133,7 +133,7 @@ const useStyles = makeStyles(theme => ({
 		cursor: 'pointer',
 		transition: 'color 0.3s',
 		'&:hover': {
-			color: '#039be5'
+			color: theme.palette.primary.main
 		}
 	},
 }))

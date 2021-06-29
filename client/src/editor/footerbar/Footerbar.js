@@ -2,17 +2,27 @@ import React from 'react'
 import { Button, Tooltip, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core'
 
-export default function Footerbar({ cancelEdit }) {
+export default function Footerbar({ handleCancel }) {
 	const classes = useStyles()
 
 	return (
 		<div className={classes.footerBar}>
 			<div className={classes.footerBar_message}>
-				<Typography className={classes.footerBar_header} variant="h2">Turn your photos into stunning graphics</Typography>
-				<Typography className={classes.footerBar_subheader} variant="h3">From posters to cards and so much more - You can design anything in PhotoFrame</Typography>
+				<Typography className={classes.footerBar_header} variant="h2">
+					Turn your photos into stunning graphics
+				</Typography>
+				<Typography className={classes.footerBar_subheader} variant="h3">
+					From posters to cards and so much more - You can design anything in PhotoFrame
+				</Typography>
 			</div>
 			<Tooltip title="Cancel" arrow>
-				<Button className={classes.footerBar_cancelBtn} variant="contained" color="primary" onClick={cancelEdit}>Cancel</Button>
+				<Button
+					className={classes.footerBar_cancelBtn}
+					variant="contained"
+					color="primary"
+					onClick={handleCancel}>
+					Cancel
+				</Button>
 			</Tooltip>
 		</div>
 	)

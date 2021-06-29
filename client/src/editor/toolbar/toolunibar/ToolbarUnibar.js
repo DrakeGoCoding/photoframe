@@ -4,15 +4,19 @@ import { makeStyles } from '@material-ui/core'
 import TuneIcon from '@material-ui/icons/Tune';
 import CropIcon from '@material-ui/icons/Crop';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-
 import ToolbarUnibarFilterPane from './ToolbarUnibarFilterPane'
 import ToolbarUnibarEditPane from './ToolbarUnibarEditPane'
 import ToolbarUnibarTextPane from './ToolbarUnibarTextPane'
 
-export default function ToolbarUnibar({ filters, services, handleShowPane, handleChangeFilter, resetFilters, visibleBackBtn, setVisibleBackBtn }) {
+export default function ToolbarUnibar({
+	services, filters, edits,
+	handleShowPane, handleChangeFilter, handleChangeEdit,
+	resetFilters, resetEdits,
+	visibleBackBtn, setVisibleBackBtn
+}) {
 	const classes = useStyles()
 
-	const SERVICES_DICTIONARY = [
+	const SERVICE_UI_DICTIONARY = [
 		{
 			name: 'Filter',
 			icon: <TuneIcon className={classes.toolbarTabs_tuneIcon} />,
@@ -26,7 +30,10 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 			name: 'Edit',
 			icon: <CropIcon className={classes.toolbarTabs_cropIcon} />,
 			pane:
-				<ToolbarUnibarEditPane />
+				<ToolbarUnibarEditPane
+					edits={edits}
+					handleChangeEdit={handleChangeEdit}
+					resetEdits={resetEdits} />
 		},
 		{
 			name: 'Text',
@@ -53,7 +60,7 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 												<button
 													className={classes.toolbarUnibar_mainMenuItem}
 													onClick={() => { handleShowPane(index); setVisibleBackBtn(true) }}>
-													{SERVICES_DICTIONARY[index].icon}
+													{SERVICE_UI_DICTIONARY[index].icon}
 												</button>
 											</div>
 										</div>
@@ -74,7 +81,7 @@ export default function ToolbarUnibar({ filters, services, handleShowPane, handl
 								option.active
 									? classNames(classes.toolbarUnibar_childWrapper, classes.toolbarUnibar_childWrapper_active)
 									: classes.toolbarUnibar_childWrapper}>
-							{SERVICES_DICTIONARY[index].pane}
+							{SERVICE_UI_DICTIONARY[index].pane}
 						</div>
 					)
 				})
@@ -131,7 +138,7 @@ const useStyles = makeStyles(theme => ({
 		flex: '0 0 auto',
 		display: 'flex',
 		justifyContent: 'center',
-		marginTop: '16px'
+		// marginTop: '16px'
 	},
 	tabPagerItem_tab: {
 		flex: '0 1 auto',

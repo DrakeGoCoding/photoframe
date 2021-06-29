@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 		'&:hover': {
 			background: 'none',
 			boxShadow: 'none',
-			color: '#039be5'
+			color: theme.palette.primary.main
 		}
 	},
 	headerBar_backBtn_enabled: {
@@ -163,7 +163,7 @@ const useStyles = makeStyles(theme => ({
 			'&:hover': {
 				background: 'none',
 				boxShadow: 'none',
-				color: '#039be5'
+				color: theme.palette.primary.main
 			}
 		},
 		headerBar_downloadBtn: {
@@ -176,7 +176,7 @@ const useStyles = makeStyles(theme => ({
 			'&:hover': {
 				background: 'none',
 				boxShadow: 'none',
-				color: '#039be5'
+				color: theme.palette.primary.main
 			}
 		},
 		headerBar_saveIcon: {
