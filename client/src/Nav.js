@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DrawerComponent from './DrawerComponent'
 import { useHistory } from "react-router-dom";
 import {
@@ -6,7 +6,9 @@ import {
     useTheme,
     withStyles
 } from '@material-ui/core/styles';
-import { Link } from 'react-scroll'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HelpIcon from '@material-ui/icons/Help';
 
 import {
     useMediaQuery,
@@ -17,15 +19,14 @@ import {
     Menu,
     MenuItem,
     useScrollTrigger,
-    Slide
+    Slide,
+    IconButton,
 } from '@material-ui/core';
 
 import logo from './assets/logo.png'
 
 const StyledMenu = withStyles({
-    paper: {
-        border: '1px solid #d3d4d5',
-    },
+
 })((props) => (
     <Menu
         getContentAnchorEl={null}
@@ -45,6 +46,7 @@ const StyledMenuItem = withStyles((theme) => ({}))(MenuItem);
 interface props {
     children: React.ReactElement;
 }
+
 function HideOnSrcoll({ children }: props) {
     const trigger = useScrollTrigger();
     return (
@@ -56,54 +58,68 @@ function HideOnSrcoll({ children }: props) {
 
 const useStyles = makeStyles((theme) => ({
     bar: {
-        background: '#f3f3f3',
+        background: '#fff',
         width: '100%',
-        height: 'auto',
-        padding: '10px 0px 10px 0px',
+        padding: '15px 0px 15px 0px',
         [theme.breakpoints.down('xs')]: {
             padding: '0',
-        },
+        }
     },
     toolbar: {
-        width: '85%',
+        width: '96%',
         margin: 'auto',
         top: '0',
     },
+    wrapBtnNUT: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    btnRight: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    btnLeft: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     btnAccount: {
         color: '#039be5',
-        background: 'rgba(255,255,255,0)',
-        position: 'absolute',
-        right: '0',
-        width: 'auto',
-        borderRadius: '10px',
+        [theme.breakpoints.down('md')]: {
+            fontSize: 'small'
+        }
+    },
+    btncreateEdit: {
+        color: '#fff',
+        backgroundColor: '#039be5',
+        borderRadius: '4px',
         textTransform: 'uppercase',
+        fontWeight: '600',
+        height: '40px',
         '&:hover': {
-            backgroundColor: '#12a0d0',
+            backgroundColor: '#0485c3',
             color: '#fefefe'
         },
         [theme.breakpoints.down('md')]: {
             fontSize: 'small'
         }
     },
-    wrapBtnNUT: {
-        width:'50%'
-    },
+
     btnNUT: {
         textTransform: 'uppercase',
         color: '#039be5',
-        marginLeft: '2.5em',
+        marginLeft: '1.5vw',
         fontWeight: '600',
         [theme.breakpoints.down('sm')]: {
             fontSize: 'small'
         }
     },
-    nested: {
-        paddingLeft: '10px'
-    },
     logo: {
         height: 'auto',
         width: '10%',
-        margin: '0em 5em 0em 0em',
         [theme.breakpoints.down('sm')]: {
             height: 'auto',
             width: '13%',
@@ -114,13 +130,22 @@ const useStyles = makeStyles((theme) => ({
             width: '17%',
             margin: '0em 0em 0em 0em',
         },
-    }
+        
+    },
+    inputA: {
+        display: 'none',
+      },
 }));
 
 export default function Nav() {
     let history = useHistory();
 
-    const [login, setLogin] = useState(true)
+    const [token, setToken] = useState('')
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken')
+        setToken(token || '')
+    }, [token])
 
     const classes = useStyles();
     const theme = useTheme();
@@ -135,10 +160,10 @@ export default function Nav() {
         setAnchorElAC(null);
     };
 
-    const albumHandle =()=>{
-        if(!login){
-            history.push("/login");
-        }
+    const logout = () => {
+        //setToken('');
+        localStorage.removeItem('accessToken');
+        window.location.reload();
     }
 
     return (
@@ -149,50 +174,49 @@ export default function Nav() {
                     {isMatch ? (<><DrawerComponent /></>)
                         : (
                             <div className={classes.wrapBtnNUT}>
-                                <Link
-                                    activeClass="active"
-                                    to="container" spy={true}
-                                    smooth={true}
-                                    offset={0}
-                                    duration={500}
-                                    delay={100}>
+                                <div className={classes.btnLeft}>
                                     <Button className={classes.btnNUT}>Home</Button>
-                                </Link>
-                                <Link
-                                    className={classes.btnNUT}
-                                    activeClass="active"
-                                    to="album" spy={true}
-                                    smooth={true}
-                                    offset={0}
-                                    duration={500}
-                                    delay={100}>
-                                    <Button className={classes.btnNUT}
-                                        onClick={albumHandle}>Album</Button>
-                                </Link>
-                                <Link
-                                    className={classes.btnNUT}
-                                    activeClass="active"
-                                    to="feedback" spy={true}
-                                    smooth={true}
-                                    offset={0}
-                                    duration={500}
-                                    delay={100}>
+                                    <Button className={classes.btnNUT}>Tips</Button>
+                                    <Button className={classes.btnNUT}>Blog</Button>
                                     <Button className={classes.btnNUT}>Contact</Button>
-                                </Link>
-                                {login ? (
-                                    <>
-                                        <Button className={classes.btnAccount} variant="outlined" onClick={handleClickAccount}>account</Button>
-                                        <StyledMenu anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
+                                </div>
+                                {token ? (
+                                    <div className={classes.btnRight}>
+                                        <IconButton  className={classes.btnAccount}>
+                                            <HelpIcon fontSize="large" />
+                                        </IconButton>
+                                        <IconButton className={classes.btnAccount}>
+                                            <SettingsIcon fontSize="large" />
+                                        </IconButton>
+                                        <div style={{margin:'0 12px'}}>
+                                            <input
+                                                accept="image/*"
+                                                className={classes.inputA}
+                                                id="contained-button-file"
+                                                multiple
+                                                type="file"
+                                            />
+                                            <label htmlFor="contained-button-file">
+                                                <Button variant="contained" color="primary" component="span">
+                                                    Upload
+                                                </Button>
+                                            </label>
+                                            <input accept="image/*" className={classes.inputA} id="icon-button-file" type="file" />
+                                        </div>
+                                        <IconButton className={classes.btnAccount}>
+                                            <AccountCircleIcon fontSize="large" onClick={handleClickAccount} />
+                                        </IconButton>
+                                        <StyledMenu style={{float: 'left'}} anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
                                             <StyledMenuItem>
-                                                <ListItemText className={classes.btnLeft} primary="Profile" />
+                                                <ListItemText className={classes.btnLeft} onClick={() => history.push("/settings")} primary="Account Setting" />
                                             </StyledMenuItem>
                                             <StyledMenuItem>
-                                                <ListItemText className={classes.btnLeft} primary="Log out" />
+                                                <ListItemText className={classes.btnLeft} onClick={logout} primary="Log out" />
                                             </StyledMenuItem>
                                         </StyledMenu>
-                                    </>)
+                                    </div>)
                                     : (
-                                        <Button size="nomal" variant="outlined" color="primary" className={classes.btnAccount} onClick={history.push("/login")}>LOGIN</Button>
+                                        <Button size="medium" variant="outlined" color="primary" className={classes.btnAccount} onClick={() => history.push("/login")}>LOGIN</Button>
                                     )}
                             </div>
                         )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Nav from './Nav'
-
+import Footer from './Footer';
 import {
     makeStyles,
     Button,
@@ -13,12 +13,14 @@ import {
     InputAdornment
 } from '@material-ui/core';
 import dataImages from './dataImg.json';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
-import bgHome5 from './assets/bgHome5.jpg'
-import Footer from './Footer';
+
+import './index.css'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,107 +30,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-
-
 export default function Home() {
     const classes = useStyles();
-    const [login, setLogin] = useState(true)
     return (
         <div className={classes.root}>
-            <Nav/>
-            <Container1/>
-            {login && <Album />}
-            <FeedBack/>
-            <Footer/>
+            <Nav />
+            <Album />
+            <FeedBack />
+            <Footer />
         </div>
     )
 }
 
-
-//Con1
-const Container1 = () => {
-    const classes = useStylesCon1();
-    return (
-        <Grid container id="container" className={classes.gridRoot} style={{ backgroundImage: `url(${bgHome5})` }} >
-            <Grid item xs={8} className={classes.box} >
-                <span className={classes.slogan}>MAKE YOUR PHOTO BETTER </span>
-                <span className={classes.sub}>Iet's create your ideas...</span>
-                <Button className={classes.btnEdit} variant="contained" ><b>Edit your photo now</b></Button>
-            </Grid>
-        </Grid>
-    )
-}
-
-const useStylesCon1 = makeStyles((theme) => ({
-    gridRoot: {
-        backgroundSize: 'cover',
-        height: '97vh',
-        [theme.breakpoints.down('sm')]: {
-            height: '80vh',
-        },
-        [theme.breakpoints.down('xs')]: {
-            height: '35vh',
-        },
-    },
-    slogan: {
-        color: 'white',
-        fontWeight: '600',
-        marginLeft: '40px',
-        fontSize: '40px',
-        fontFamily: 'TimeNewRoman',
-        marginTop: '50px',
-        [theme.breakpoints.down('md')]: {
-            fontSize: '30px',
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: '22px',
-        },
-        [theme.breakpoints.down('xs')]: {
-            fontSize: '13px',
-        },
-    },
-    sub: {
-        color: 'white',
-        fontSize: '30px',
-        marginTop: '10px',
-        marginLeft: '10px',
-        [theme.breakpoints.down('md')]: {
-            fontSize: '25px',
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: '20px',
-        },
-        [theme.breakpoints.down('xs')]: {
-            fontSize: '13px',
-        },
-    },
-    btnEdit: {
-        marginTop: '28px',
-        borderRadius: '15px',
-
-        textTransform: 'uppercase',
-        '&:hover': {
-            backgroundColor: '#12a0d0',
-            color: '#fefefe'
-        },
-        [theme.breakpoints.down('md')]: {
-            fontSize: '12px',
-        },
-        [theme.breakpoints.down('xs')]: {
-            marginTop: '20px',
-            fontSize: '5px',
-        },
-    },
-    box: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-}));
-//End Con1
 
 //Album
 const Album = () => {
@@ -142,7 +55,7 @@ const Album = () => {
     const [spacing, setSpacing] = useState('')
     const setAlbum = () => {
         return (
-            !isMatch_md ? (setSpacing(60), setHeight(290)) :
+            !isMatch_md ? (setSpacing(50), setHeight(210)) :
                 (!isMatch_sm ? (setSpacing(40), setHeight(250)) :
                     (!isMatch_xs ? (setSpacing(20), setHeight(220)) :
                         (setSpacing(10), setHeight(100))))
@@ -150,15 +63,21 @@ const Album = () => {
     }
     const [visiable, setVisiable] = useState(6)
     useEffect(() => { setAlbum() });
+    const [showDot, setShowDot] = useState(false)
     return (
         <div id="album" className={classes.album} >
-            <span className={classes.yourAlbum}>Your Album</span>
             <Grid container justify='center' >
                 <div className={classes.main_album}>
-                    <GridList cellHeight={height} cols={3} spacing={spacing}>
+                    <p className={classes.yourAlbum}>Your Album</p>
+                    <GridList cellHeight={height} cols={5} spacing={spacing}>
                         {dataImages.slice(0, visiable).map((data) => (
-                            <GridListTile key={data.id}>
-                                <img className={classes.img} src={data.image} alt={data.title} />
+                            <GridListTile className={classes.gridListTile} key={data.id}  >
+                                <img className={classes.img} src={data.image} alt={data.title} onMouseOver={() => setShowDot(true)} onMouseOut={() => setShowDot(false)}/>
+                                {showDot && <span className={classes.moreImg}>
+                                    <IconButton aria-label="3dot" className={classes.iconDot}>
+                                        <MoreHorizIcon fontSize="medium" />
+                                    </IconButton>
+                                </span>}
                             </GridListTile>
                         ))}
                     </GridList>
@@ -166,7 +85,7 @@ const Album = () => {
             </Grid >
             {visiable < dataImages.length &&
                 <Button variant='contained' className={classes.btnMore} size='small' onClick={() => setVisiable(visiable + 3)}>
-                    More<ExpandMoreIcon />
+                    More
                 </Button>
             }
 
@@ -177,35 +96,63 @@ const Album = () => {
 const useStylesAlbum = makeStyles((theme) => ({
     album: {
         width: '100%',
-        marginTop: '3em',
+        marginTop: '97px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center'
     },
     yourAlbum: {
-        fontSize: '28px',
-        backgroundColor: '#28c4c3',
-        color: '#fff',
-        margin: '0.3em 0.3em 1em 0.3em',
-        padding: '0.2em 1em 0.2em 1em',
+        fontSize: '24px',
+        fontWeight: '600',
+        color: '#000',
+        margin: '1em 0em 1em 0em',
         borderRadius: '15px',
+        fontFamily: 'Quicksand',
+
     },
     main_album: {
-        width: '80%',
+        width: '92%',
+    },
+    gridListTile: {
+        position: 'relative',
+        
     },
     img: {
         backgroundSize: 'cover',
         height: '100%',
-        width: '100%'
+        width: '100%',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        '&:hover': {
+
+        },
+    },
+    moreImg: {
+        position: 'absolute',
+        top: '8px',
+        right: '8px',
+        padding: '0',
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        borderRadius: '5px',
+        '&:hover': {
+            backgroundColor: '#039be5',
+        }
+    },
+    iconDot: {
+        padding: '0',
+        '&:hover': {
+            color:'#ffffff',
+        }
     },
     btnMore: {
         backgroundColor: '#039be5',
-        borderRadius: '15px',
-        margin: '1.5em 0em 1.5em 0em ',
-        paddingLeft: '15px'
+        borderRadius: '5px',
+        margin: '2em 0em 1.5em 0em ',
+        padding: '0.5rem 1rem',
+        color: '#fff',
+        fontSize: 'large'
+    },
 
-    }
 }));
 
 
@@ -270,9 +217,8 @@ const FeedBack = () => {
     }
     return (
         <div id="feedback" className={classes.root}>
-
-            <p className={classes.contactLabel}>Get in Touch with Us</p>
-            <Grid className={classes.grid} container spacing={5}>
+            <span className={classes.contactLabel}>Get in Touch with Us</span>
+            <Grid className={classes.gridForm} container spacing={5}>
                 <Grid item xs={4}>
                     <TextField
                         fullWidth
@@ -284,7 +230,7 @@ const FeedBack = () => {
                         error={Boolean(errors.errName)}
                         InputProps={{
                             startAdornment: (
-                                <InputAdornment position="start">
+                                <InputAdornment className={classes.icon} position="start">
                                     <AccountCircle />
                                 </InputAdornment>
                             ),
@@ -303,7 +249,7 @@ const FeedBack = () => {
                         onChange={changeEmail}
                         InputProps={{
                             startAdornment: (
-                                <InputAdornment position="start">
+                                <InputAdornment className={classes.icon} position="start">
                                     <EmailIcon />
                                 </InputAdornment>
                             ),
@@ -322,7 +268,7 @@ const FeedBack = () => {
                         onChange={changePhone}
                         InputProps={{
                             startAdornment: (
-                                <InputAdornment position="start">
+                                <InputAdornment className={classes.icon} position="start">
                                     <PhoneIcon />
                                 </InputAdornment>
                             ),
@@ -345,35 +291,42 @@ const FeedBack = () => {
                     />
                 </Grid>
             </Grid>
-            <Button className={classes.btnSubmit} variant="contained" color="primary" onClick={submit} type="submit">SEND MESSAGE</Button>
+            <div className={classes.bntSend}>
+                <Button className={classes.btnSubmit} variant="contained" color="primary" onClick={submit} type="submit">Send</Button>
+            </div>
         </div>
     )
 }
 
 const useStylesFeedBack = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        textAlign: 'center',
-        marginBottom: "1em"
+        width: '80%',
+        margin: '2em auto 1em auto'
     },
-    grid: {
-        width: '85%',
-        margin: 'auto',
-    },
-
     contactLabel: {
-        fontSize: '28px',
-        backgroundColor: '#28c4c3',
-        color: '#fff',
-        padding: '0.2em 0.6em 0.2em 0.6em',
-        borderRadius: '15px',
-        display: 'inline-block'
+        fontSize: '24px',
+        color: '#000',
+        display: 'inline-block',
+        fontWeight: '600'
+    },
+    gridForm: {
+        marginTop: '0.5em',
+        marginBottom: '0.5em'
+    },
+    bntSend: {
+        width: '100%',
+        textAlign: 'center'
     },
     btnSubmit: {
-        fontSize: 'large',
-        padding: '0.8em 1.3em 0.8em 1.3em',
-        borderRadius: '15px',
-        margin: '1em 0em 1em 0em'
+        backgroundColor: '#039be5',
+        borderRadius: '5px',
+        margin: '0.2em 0em 1.5em 0em ',
+        padding: '0.5rem 1rem',
+        color: '#fff',
+        fontSize: 'large'
+    },
+    icon: {
+        color: '#039be5'
     }
 }));
 

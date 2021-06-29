@@ -4,6 +4,8 @@ import SignUp from './SignUp'
 import LogIn from './LogIn'
 import ResetPassword from './ResetPassword'
 import Home from './Home'
+import AccountSetting from './AccountSetting'
+import Home1 from './Home1'
 
 export default function Navigation() {
     const [token, setToken] = useState('')
@@ -31,7 +33,7 @@ export default function Navigation() {
                     ?
                     <Switch>
                         <Route exact path="/">
-                            <Home />
+                            <Home1 />
                         </Route>
                         <Route path="/login">
                             <LogIn setToken={login} />
@@ -42,10 +44,10 @@ export default function Navigation() {
                     :
                     <Switch>
                         <Route exact path="/">
-                            <p>User main page</p>
+                            <Home />
                         </Route>
                         <Route path="/settings"> 
-                            <p>Account setting page</p>
+                            <AccountSetting />
                         </Route>
                         <Route>
                             <p>Editor page</p>
