@@ -48,7 +48,7 @@ interface props {
     children: React.ReactElement;
 }
 
-function HideOnSrcoll({ children }: props) {
+function HideOnScroll({ children }: props) {
     const trigger = useScrollTrigger();
     return (
         <Slide appear={false} direction={"down"} in={!trigger}>
@@ -185,7 +185,7 @@ export default function Nav() {
     }
 
     return (
-        <HideOnSrcoll>
+        <HideOnScroll>
             <AppBar className={classes.bar} >
                 <Toolbar className={classes.toolbar}>
                     <img alt="Logo" src={logo} className={classes.logo} />
@@ -240,6 +240,6 @@ export default function Nav() {
                         )}
                 </Toolbar>
             </AppBar>
-        </HideOnSrcoll>
+        </HideOnScroll>
     )
 }
