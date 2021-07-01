@@ -216,7 +216,10 @@ export default function Editor() {
 	const handleSave = async () => {
 		const saveConfirmed = window.confirm('This cannot be undone. Are you sure to save changes? ')
 		if (saveConfirmed) {
-			const source = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format)
+			const rotateValue = imageEdits.find(option => option.name === 'Rotate').value
+			const flipValue = imageEdits.find(option => option.name === 'Flip').value;
+			const resizeValue = imageEdits.find(option => option.name === 'Resize').value;
+			const source = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format, rotateValue, flipValue, resizeValue)
 			try {
 				await uploadPhoto({ data: source })
 				await deletePhotoById(id)

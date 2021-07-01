@@ -146,7 +146,6 @@ export default function Nav() {
     useEffect(() => {
         const accessToken = localStorage.getItem('token')
         setToken(accessToken || '');
-        console.log(accessToken);
     }, [])
 
     const classes = useStyles();
