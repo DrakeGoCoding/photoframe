@@ -1,12 +1,14 @@
 import './App.css';
 import LogIn from './LogIn';
+import AccountSetting from './AccountSetting'
 // import SignUp from './SignUp';
 // import ResetPassword from './ResetPassword'
 
 function App() {
     return (
         <div className="App">
-            <LogIn />
+            {<AccountSetting/>}
+            {/* <LogIn /> */}
             {/* <SignUp /> */}
             {/* <ResetPassword /> */}
         </div>
