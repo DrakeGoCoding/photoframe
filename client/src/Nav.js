@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 
 import logo from './assets/logo.png'
+import { uploadPhoto } from './Axios'
 
 const StyledMenu = withStyles({
 
@@ -130,11 +131,11 @@ const useStyles = makeStyles((theme) => ({
             width: '17%',
             margin: '0em 0em 0em 0em',
         },
-        
+
     },
     inputA: {
         display: 'none',
-      },
+    },
 }));
 
 export default function Nav() {
@@ -143,9 +144,10 @@ export default function Nav() {
     const [token, setToken] = useState('')
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken')
-        setToken(token || '')
-    }, [token])
+        const accessToken = localStorage.getItem('token')
+        setToken(accessToken || '');
+        console.log(accessToken);
+    }, [])
 
     const classes = useStyles();
     const theme = useTheme();
@@ -160,6 +162,23 @@ export default function Nav() {
         setAnchorElAC(null);
     };
 
+    const changePhoto = e => {
+        const file = e.target.files[0]
+        if (!file) return;
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = async () => {
+            const previewSource = reader.result
+            if (!previewSource) return
+            try {
+                const result = await uploadPhoto({ data: previewSource })
+                history.push(`/editor/${result.data.cloudinaryId}`)
+            } catch (error) {
+                console.log(error.response.data.error)
+            }
+        }
+    }
+
     const logout = () => {
         //setToken('');
         localStorage.removeItem('accessToken');
@@ -170,7 +189,7 @@ export default function Nav() {
         <HideOnSrcoll>
             <AppBar className={classes.bar} >
                 <Toolbar className={classes.toolbar}>
-                    <img Button alt="Logo" src={logo} className={classes.logo} />
+                    <img alt="Logo" src={logo} className={classes.logo} />
                     {isMatch ? (<><DrawerComponent /></>)
                         : (
                             <div className={classes.wrapBtnNUT}>
@@ -182,31 +201,31 @@ export default function Nav() {
                                 </div>
                                 {token ? (
                                     <div className={classes.btnRight}>
-                                        <IconButton  className={classes.btnAccount}>
+                                        <IconButton className={classes.btnAccount}>
                                             <HelpIcon fontSize="large" />
                                         </IconButton>
                                         <IconButton className={classes.btnAccount}>
                                             <SettingsIcon fontSize="large" />
                                         </IconButton>
-                                        <div style={{margin:'0 12px'}}>
+                                        <div style={{ margin: '0 12px' }}>
                                             <input
                                                 accept="image/*"
                                                 className={classes.inputA}
                                                 id="contained-button-file"
-                                                multiple
                                                 type="file"
+                                                onChange={changePhoto}
                                             />
                                             <label htmlFor="contained-button-file">
                                                 <Button variant="contained" color="primary" component="span">
                                                     Upload
                                                 </Button>
                                             </label>
-                                            <input accept="image/*" className={classes.inputA} id="icon-button-file" type="file" />
+
                                         </div>
                                         <IconButton className={classes.btnAccount}>
                                             <AccountCircleIcon fontSize="large" onClick={handleClickAccount} />
                                         </IconButton>
-                                        <StyledMenu style={{float: 'left'}} anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
+                                        <StyledMenu style={{ float: 'left' }} anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
                                             <StyledMenuItem>
                                                 <ListItemText className={classes.btnLeft} onClick={() => history.push("/settings")} primary="Account Setting" />
                                             </StyledMenuItem>

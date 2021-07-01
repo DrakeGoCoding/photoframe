@@ -6,25 +6,27 @@ import ResetPassword from './ResetPassword'
 import Home from './Home'
 import AccountSetting from './AccountSetting'
 import Home1 from './Home1'
+import Editor from './editor/Editor'
+import Upload from './Upload'
 
 export default function Navigation() {
-    const [token, setToken] = useState('')
+	const [token, setToken] = useState('')
 
-    const login = token => {
-        setToken(token)
-        localStorage.setItem('accessToken', token)
-    }
+	const login = token => {
+		setToken(token)
+		localStorage.setItem('token', token);
+	}
 
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken')
-        if (token) {
-            try {
-                setToken(token)
-            } catch (error) {
-                setToken('')
-            }
-        }
-    }, [token])
+	useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) {
+			try {
+				setToken(token)
+			} catch (error) {
+				setToken('')
+			}
+		}
+	}, [token])
 
     return (
         <Router>
@@ -49,9 +51,8 @@ export default function Navigation() {
                         <Route path="/settings"> 
                             <AccountSetting />
                         </Route>
-                        <Route>
-                            <p>Editor page</p>
-                        </Route>
+						<Route path="/editor/:id" component={Editor} />
+						<Route path="/upload" component={Upload}/>
                     </Switch>
             }
         </Router>

@@ -6,7 +6,7 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use(req => {
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('token')
     req.headers['Authorization'] = 'Bearer ' + token
     return req
 })
@@ -27,6 +27,22 @@ export const resetPassword = (body) => {
     return instance.post('/auth/resetPassword', body)
 }
 
-export const checkCode = (body) => {
+export const checkResetPasswordCode = (body) => {
     return instance.post('/auth/code', body)
 }
+
+export const uploadPhoto = (body) => {
+	return instance.post('/photo/upload', body)
+}
+
+export const getPhotoById = (id) => {
+	return instance.get(`/photo/${id}`)
+}
+
+export const getAllPhotosFromUser = (userId) => {
+	return instance.get(`/photo/all/${userId}`)
+}
+
+export const deletePhotoById = (id) => {
+	return instance.delete(`/photo/${id}`)
+} 

@@ -38,10 +38,10 @@ export default function DrawerComponent() {
 
     const [token, setToken] = useState('')
 
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken')
-        token ? setToken(token) : history.push('/login')
-    }, [token])
+    // useEffect(() => {
+    //     const token = localStorage.getItem('accessToken')
+    //     token ? setToken(token) : history.push('/login')
+    // }, [])
     let history = useHistory();
     return (
         <>

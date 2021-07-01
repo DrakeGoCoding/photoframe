@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const userSchema = mongoose.Schema(
-    {
+	{
         name: {
             type: String,
             trim: true,
@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema(
         password: {
             type: String
         },
+		avatarId: {
+			type: String
+		},
         googleToken: {
             type: String
         },

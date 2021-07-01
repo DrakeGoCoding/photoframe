@@ -4,16 +4,16 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Icon, Link, TextField, Typography, CircularProgress } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from './assets/Alert'
+import Alert from './Alert'
 
 import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import FacebookLogin from 'react-facebook-login'
 
 import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
 import FacebookIcon from './assets/facebook.svg'
 
-import { checkName, checkEmail, checkPassword } from './utils'
+import { checkName, checkEmail, checkPassword } from './utils/utils'
 import { signup } from './Axios';
 
 export default function SignUp() {
@@ -200,7 +200,7 @@ export default function SignUp() {
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <GoogleLogin
-                                    clientId="754246735652-rt5pm47ctndoeonb3qcehaeh1krri2j4.apps.googleusercontent.com"
+                                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                                     render={renderGoogleBtn}
                                     onSuccess={responseGoogle}
                                     onFailure={responseGoogle}
@@ -208,7 +208,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <FacebookLogin
-                                    appId="529841281727853"
+                                    appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                                     render={renderFacebookBtn}
                                     callback={responseFacebook}
                                     fields="name,email,picture" />
