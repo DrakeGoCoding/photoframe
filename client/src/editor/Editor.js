@@ -134,7 +134,7 @@ export default function Editor() {
 			name: 'Rotate',
 			property: 'rotate',
 			value: 0,
-			active: false
+			active: true
 		},
 		{
 			name: 'Flip',
@@ -149,21 +149,22 @@ export default function Editor() {
 		// 	name: 'Crop',
 		// 	active: false
 		// },
-		// {
-		// 	name: 'Resize',
-		// 	property: 'scale',
-		// 	value: {
-		// 		x: 1,
-		// 		y: 1,
-		// 	},
-		// 	active: false
-		// },
+		{
+			name: 'Resize',
+			property: 'scale',
+			value: {
+				x: 1.0,
+				y: 1.0,
+			},
+			active: false
+		},
 	]
 
 	const [imageData, setImageData] = useState(DEFAULT_DATA)
 	const [imageServices, setImageServices] = useState(DEFAULT_SERVICES)
 	const [imageFilters, setImageFilters] = useState(DEFAULT_FILTERS)
 	const [imageEdits, setImageEdits] = useState(DEFAULT_EDITS)
+	const [imageText, setImageText] = useState('')
 	const [visibleBackBtn, setVisibleBackBtn] = useState(false)
 
 	const handleShowPane = (pos) => {
@@ -184,6 +185,16 @@ export default function Editor() {
 		}))
 	}
 
+	const handleChangeText = (text) => {
+		setImageText(text)
+	}
+
+	const setActiveEdit = (optionName) => {
+		setImageEdits([...imageEdits].map(option => {
+			return { ...option, active: (option.name === optionName) ? true : false }
+		}))
+	}
+
 	const resetFilters = () => {
 		setImageFilters(DEFAULT_FILTERS)
 	}
@@ -195,7 +206,10 @@ export default function Editor() {
 	const handleDownload = () => {
 		const link = document.createElement('a')
 		link.download = `${imageData.id}.${imageData.format}`
-		link.href = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format)
+		const rotateValue = imageEdits.find(option => option.name === 'Rotate').value
+		const flipValue = imageEdits.find(option => option.name === 'Flip').value;
+		const resizeValue = imageEdits.find(option => option.name === 'Resize').value;
+		link.href = getImageDataUrl(imageRef.current, imageData.width, imageData.height, imageData.format, rotateValue, flipValue, resizeValue)
 		link.click()
 	}
 
@@ -226,9 +240,14 @@ export default function Editor() {
 			if (option.name === 'Flip') {
 				return `${option.property}(${option.value.x},${option.value.y})`
 			}
+			if (option.name === 'Resize') {
+				return `${option.property}(${option.value.x},${option.value.y})`
+			}
+			if (option.name === 'Crop') {
+				return ``
+			}
 			return null
 		})
-		console.log(imageRef.current?.parentElement.offsetWidth, imageRef.current?.parentElement.offsetHeight);
 		return { filter: filters.join(' '), transform: edits.join(' ') }
 	}
 
@@ -248,7 +267,7 @@ export default function Editor() {
 				})
 			} catch (error) {
 				setImageData(null)
-				console.log(error.response);
+				console.log(error.response.data);
 			}
 		}
 		fetchData()
@@ -263,9 +282,12 @@ export default function Editor() {
 						services={imageServices}
 						filters={imageFilters}
 						edits={imageEdits}
+						text={imageText}
 						handleShowPane={handleShowPane}
 						handleChangeFilter={handleChangeFilter}
 						handleChangeEdit={handleChangeEdit}
+						handleChangeText={handleChangeText}
+						setActiveEdit={setActiveEdit}
 						resetFilters={resetFilters}
 						resetEdits={resetEdits}
 						visibleBackBtn={visibleBackBtn}

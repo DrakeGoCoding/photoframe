@@ -28,14 +28,31 @@ export function getCookie(cname) {
 	return "";
 }
 
-export function getImageDataUrl(img, width, height, format) {
+export function getImageDataUrl(img, width, height, format, rotateValue = 0, flipValue = { x: 1, y: 1 }, resizeValue = { x: 1, y: 1 }) {
 	const canvas = document.createElement('canvas');
-	canvas.width = width;
-	canvas.height = height;
+	// canvas.width = width;
+	// canvas.height = height;
+
+	canvas.width = width * resizeValue.x;
+	canvas.height = height * resizeValue.y;
 
 	const ctx = canvas.getContext('2d');
 	ctx.filter = img.style.filter
+
+	ctx.setTransform(
+		flipValue.x,
+		0,
+		0,
+		flipValue.y,
+		flipValue.x === -1 ? canvas.width : 0,
+		flipValue.y === -1 ? canvas.height : 0
+	)
+	ctx.scale(resizeValue.x, resizeValue.y)
+	// ctx.rotate(rotateValue * Math.PI / 180)
+	console.log(canvas);
+
 	ctx.drawImage(img, 0, 0);
+
 	return canvas.toDataURL(`image/${format}`)
 }
 
