@@ -152,6 +152,9 @@ const Album = () => {
 									</IconButton>
 									<StyledMenu style={{ float: 'left' }} anchorEl={anchorElAC} open={Boolean(anchorElAC)} onClose={handleCloseAccount}>
 										<StyledMenuItem>
+											<ListItemText className={classes.btnLeft} primary={`Hi!`} />
+										</StyledMenuItem>
+										<StyledMenuItem>
 											<ListItemText className={classes.btnLeft} primary="Edit" onClick={() => history.push(`/editor/${data.cloudinaryId}`)} />
 										</StyledMenuItem>
 										<StyledMenuItem>

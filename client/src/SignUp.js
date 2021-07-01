@@ -206,13 +206,13 @@ export default function SignUp() {
                                     onFailure={responseGoogle}
                                     cookiePolicy={'single_host_origin'} />
                             </Grid>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <FacebookLogin
                                     appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                                     render={renderFacebookBtn}
                                     callback={responseFacebook}
                                     fields="name,email,picture" />
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                         <hr className={classes.separator} />
                         <Link href="#" variant="body2" align="center" onClick={redirectLogin}>{"Already have an account? Log in"}</Link>
