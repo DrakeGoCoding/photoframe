@@ -114,10 +114,10 @@ export default function ToolbarEditPane({ edits, handleChangeEdit, resetEdits, s
 					</button>
 				</section>
 		},
-		// {
-		// 	name: 'Crop',
-		// 	pane: ''
-		// },
+		{
+			name: 'Crop',
+			pane: ''
+		},
 		{
 			name: 'Resize',
 			pane:

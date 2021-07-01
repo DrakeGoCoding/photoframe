@@ -109,10 +109,10 @@ export default function ToolbarUnibarEditPane({ edits, handleChangeEdit, resetEd
 					</button>
 				</section>
 		},
-		// {
-		// 	name: 'Crop',
-		// 	pane: ''
-		// },
+		{
+			name: 'Crop',
+			pane: ''
+		},
 		{
 			name: 'Resize',
 			pane:

@@ -145,10 +145,10 @@ export default function Editor() {
 			},
 			active: false
 		},
-		// {
-		// 	name: 'Crop',
-		// 	active: false
-		// },
+		{
+			name: 'Crop',
+			active: false
+		},
 		{
 			name: 'Resize',
 			property: 'scale',
