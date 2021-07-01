@@ -11,8 +11,9 @@ import ToolbarTextPane from './ToolbarTextPane';
 import ToolbarUnibar from './toolunibar/ToolbarUnibar';
 
 export default function Toolbar({
-	data, services, filters, edits,
-	handleShowPane, handleChangeFilter, handleChangeEdit,
+	data, services, filters, edits, text,
+	handleShowPane, handleChangeFilter, handleChangeEdit, handleChangeText,
+	setActiveEdit,
 	resetFilters, resetEdits,
 	visibleBackBtn, setVisibleBackBtn
 }) {
@@ -35,13 +36,16 @@ export default function Toolbar({
 				<ToolbarEditPane
 					edits={edits}
 					handleChangeEdit={handleChangeEdit}
-					resetEdits={resetEdits} />
+					resetEdits={resetEdits}
+					setActiveEdit={setActiveEdit} />
 		},
 		{
 			name: 'Text',
 			icon: <TextFieldsIcon className={classes.toolbarTabs_textIcon} />,
 			pane:
-				<ToolbarTextPane />
+				<ToolbarTextPane
+					text={text}
+					handleChangeText={handleChangeText} />
 		}
 	]
 
@@ -97,9 +101,12 @@ export default function Toolbar({
 				services={services}
 				filters={filters}
 				edits={edits}
+				text={text}
 				handleShowPane={handleShowPane}
 				handleChangeFilter={handleChangeFilter}
 				handleChangeEdit={handleChangeEdit}
+				handleChangeText={handleChangeText}
+				setActiveEdit={setActiveEdit}
 				resetFilters={resetFilters}
 				resetEdits={resetEdits}
 				visibleBackBtn={visibleBackBtn}

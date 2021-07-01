@@ -9,8 +9,9 @@ import ToolbarUnibarEditPane from './ToolbarUnibarEditPane'
 import ToolbarUnibarTextPane from './ToolbarUnibarTextPane'
 
 export default function ToolbarUnibar({
-	services, filters, edits,
-	handleShowPane, handleChangeFilter, handleChangeEdit,
+	services, filters, edits, text,
+	handleShowPane, handleChangeFilter, handleChangeEdit, handleChangeText,
+	setActiveEdit,
 	resetFilters, resetEdits,
 	visibleBackBtn, setVisibleBackBtn
 }) {
@@ -33,13 +34,16 @@ export default function ToolbarUnibar({
 				<ToolbarUnibarEditPane
 					edits={edits}
 					handleChangeEdit={handleChangeEdit}
-					resetEdits={resetEdits} />
+					resetEdits={resetEdits}
+					setActiveEdit={setActiveEdit} />
 		},
 		{
 			name: 'Text',
 			icon: <TextFieldsIcon className={classes.toolbarTabs_textIcon} />,
 			pane:
-				<ToolbarUnibarTextPane />
+				<ToolbarUnibarTextPane
+					text={text}
+					handleChangeText={handleChangeText} />
 		}
 	]
 

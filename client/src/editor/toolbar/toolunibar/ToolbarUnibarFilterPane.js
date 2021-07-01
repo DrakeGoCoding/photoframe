@@ -70,7 +70,8 @@ const useStyles = makeStyles(theme => ({
 		fontSize: '16px',
 		fontWeight: 400,
 		letterSpacing: 0,
-		lineHeight: 1.6
+		lineHeight: 1.6,
+		cursor: 'pointer'
 	},
 	tabPagerItem_tab_active: {
 		color: 'white'

@@ -11,13 +11,15 @@ function Canvas({ imageData, imageRef, style }) {
 					<div className={classes.canvas_image}>
 						<div className={classes.canvasImage}>
 							<div className={classes.canvasImage_workContainer} >
-								<img
-									className={classes.canvasImage_canvas}
-									src={imageData ? imageData.url : ''}
-									alt={imageData ? "" : "image"}
-									crossOrigin="anonymous"
-									ref={imageRef}
-									style={style} />
+								<figure>
+									<img
+										className={classes.canvasImage_canvas}
+										src={imageData ? imageData.url : ''}
+										alt={imageData ? "" : "image"}
+										crossOrigin="anonymous"
+										ref={imageRef}
+										style={style} />
+								</figure>
 							</div>
 						</div>
 					</div>

@@ -12,3 +12,14 @@ body {
 section {
 	display: block;
 }
+
+* {
+	box-sizing: border-box;
+	outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
