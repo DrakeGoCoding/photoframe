@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import { Button, Grid, Paper, Container, ButtonGroup, Link, Box, MuiThemeProvider, useTheme, Hidden } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { Button, Grid, Container, Box, } from '@material-ui/core'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LockIcon from '@material-ui/icons/Lock';
 import Divider from '@material-ui/core/Divider';
@@ -23,7 +23,7 @@ export default function AccountSetting(props) {
     const [openRemoveAccDialog, setRemoveAccDialog] = useState(false);
     const [username, setUsername] = useState('my name');
     const [email, setEmail] = useState('you@mail.com');
-    const [password, setPassword] = useState('');
+    // const [password, setPassword] = useState('');
     const useStyles = makeStyles((theme) => ({
         grid: {
             width: '100%',
@@ -75,7 +75,7 @@ export default function AccountSetting(props) {
     }
     const getUsernameFromInput = e => setUsername(e.target.value)
     const getEmailFromInput = e => setEmail(e.target.value)
-    const getPasswordFromInput = e => setPassword(e.target.value)
+    // const getPasswordFromInput = e => setPassword(e.target.value)
     const onClickChangeEmail = () => {
         setUpdateEmail(!updatingEmail)
     }
@@ -225,7 +225,7 @@ export default function AccountSetting(props) {
                             type="password"
                             fullWidth
                             variant="outlined"
-                            onChange={getPasswordFromInput}
+                            // onChange={getPasswordFromInput}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -277,7 +277,7 @@ export default function AccountSetting(props) {
                             type="password"
                             fullWidth
                             variant="outlined"
-                            onChange={getPasswordFromInput}
+                            // onChange={getPasswordFromInput}
                         />
                     </DialogContent>
                     <DialogActions>

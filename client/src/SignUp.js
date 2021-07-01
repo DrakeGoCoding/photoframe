@@ -7,7 +7,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Alert from './Alert'
 
 import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login'
+// import FacebookLogin from 'react-facebook-login'
 
 import BackgroundImage from './assets/bg.jpg'
 import GoogleIcon from './assets/google.svg'
@@ -91,9 +91,9 @@ export default function SignUp() {
         console.log(res);
     }
 
-    const responseFacebook = async (res) => {
-        console.log(res);
-    }
+    // const responseFacebook = async (res) => {
+    //     console.log(res);
+    // }
 
     const togglePasswordVisibility = e => {
         e.preventDefault()
@@ -115,18 +115,18 @@ export default function SignUp() {
         )
     }
 
-    const renderFacebookBtn = (renderProps) => {
-        return (
-            <Button
-                className={classes.methodBtn}
-                fullWidth
-                variant="contained"
-                onClick={renderProps.onClick}>
-                <Icon className={classes.facebookIcon}></Icon>
-                &nbsp;Continue with Facebook
-            </Button>
-        )
-    }
+    // const renderFacebookBtn = (renderProps) => {
+    //     return (
+    //         <Button
+    //             className={classes.methodBtn}
+    //             fullWidth
+    //             variant="contained"
+    //             onClick={renderProps.onClick}>
+    //             <Icon className={classes.facebookIcon}></Icon>
+    //             &nbsp;Continue with Facebook
+    //         </Button>
+    //     )
+    // }
 
     return (
         <div className={classes.background}>

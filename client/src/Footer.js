@@ -12,7 +12,7 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
-import bg from './assets/bg.jpg';
+// import bg from './assets/bg.jpg';
 
 export default function Footer() {
     const classes = useStylesFooter();
