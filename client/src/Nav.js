@@ -179,8 +179,8 @@ export default function Nav() {
     }
 
     const logout = () => {
-        //setToken('');
-        localStorage.removeItem('accessToken');
+        setToken('');
+        localStorage.removeItem('token');
         window.location.reload();
     }
 
